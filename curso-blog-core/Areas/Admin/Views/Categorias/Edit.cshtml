@@ -1,0 +1,57 @@
+﻿@{
+	ViewData["title"] = "Editar Categoría";
+}
+@model BlogCore.Models.Categoria
+
+<br />
+<br />
+<h3 class="text-center">Editar Categoría</h3>
+<form method="POST" asp-action="Edit">
+	<div class="row px-2 offset-1 border">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+		<div class="col-10 offset-1 mt-4">
+			<div class="form-group row">
+				<label asp-for="Nombre"></label>
+			</div>
+			<div class="col-8">
+				<input asp-for="Nombre" class="form-control" placeholder="Ingresa el nombre" value="@Model.Nombre"/>
+				<span asp-validation-for="Nombre" class="text-danger"></span>
+			</div>
+		</div>
+
+		<div class="col-10 offset-1 mt-4">
+			<div class="form-group row">
+				<label asp-for="Orden"></label>
+			</div>
+			<div class="col-8">
+				<input asp-for="Orden" class="form-control" placeholder="Ingresa la orden" value="@Model.Orden" />
+				<span asp-validation-for="Orden" class="text-danger"></span>
+			</div>
+		</div>
+
+		<br />
+		<br />
+
+		<div class="row">
+			<div class="rol mt-4">
+				<button type="submit" class="btn btn-sm btn-warning form-control">
+					Editar Categoría
+				</button>
+			</div>
+			&nbsp;
+			<div class="col mt-4">
+				<a asp-action="Index" class="btn btn-sm btn-success form-control">Volver atrás</a>
+			</div>
+		</div>
+		<br />
+		<div asp-validation-summary="All" class="text-danger"></div>
+	</div>
+</form>
+
+
+@section Scripts {
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+}
