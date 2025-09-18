@@ -1,0 +1,59 @@
+@{
+  ViewData["title"] = "Eliminar Item";
+}
+@model CRUD_TEST.DTOs.ItemDTO
+
+
+<div class="row">
+  <div class="offset-12">
+    <div class="card border">
+      <div class="card-header bg-black">
+        <h3 class="text-white"><strong>Eliminacion de Items</strong></h3>
+      </div>
+      <div class="card-body">
+
+        <form asp-action="Eliminar">
+
+          <input type="hidden" asp-for="Id" />
+          
+            <div class="form-group text-center">
+              <div>
+                <label asp-for="Id" class="control-label"><strong>N°</strong></label>
+                <label asp-for="Id">@Model.Id</label>
+              </div>
+              <div>
+                <label asp-for="Name" class="control-label"><strong>Nombre</strong></label>
+                <label asp-for="Name">@Model.Name</label>
+              </div>
+              <div>
+                <label asp-for="Price" class="control-label"><strong>Precio</strong></label>
+                <label asp-for="Price">@Model.Price</label>
+              </div>
+              <div>
+                <label asp-for="Name" class="control-label"><strong>N° Serie</strong></label>
+                <label asp-for="Name">@Model.SerialNumber.Name</label>
+              </div>
+              <div>
+                <label asp-for="Name" class="control-label"><strong>Categoria</strong></label>
+                <label asp-for="Name">@Model.Category.Name</label>
+              </div>
+            </div>
+          
+          <br>
+
+          <data class="form-group mt-3">
+            <button 
+              type="submit" 
+              id="myButton" 
+              class="btn btn-danger d-block mx-auto" 
+              onclick="return confirm('¿Estás seguro que quieres eliminar este item? Esta acción no se puede deshacer.');">
+              Eliminar</button>
+          </data>
+        </form>
+
+        <a asp-controller="Item" asp-action="Index" class="btn btn-sm btn-outline-secondary">Volver</a>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

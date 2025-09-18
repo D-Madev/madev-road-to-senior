@@ -1,0 +1,58 @@
+@{
+  ViewData["title"] = "Crear Categories";
+}
+@model CRUD_TEST.DTOs.CategoryDTO
+
+<div class="row">
+  <div class="offset-12">
+    <div class="card border">
+      <div class="card-header bg-black">
+        <h3 class="text-white"><strong>Creacion de Categorias</strong></h3>
+      </div>
+      <div class="card-body">
+
+        <form asp-action="Crear" method="POST">
+          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+          
+            <div class="form-group">
+              <label asp-for="Name" class="control-label">Nombre <sub>*</sub></label>
+              <input asp-for="Name" id="myInput" class="form-control" placeholder="Ingrese el nombre de la categoria" type="text">
+              <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+          
+          <br>
+
+          <data class="form-group mt-3">
+            <button type="submit" id="myButton" disabled class="btn btn-secondary d-block mx-auto">Crear</button>
+          </data>
+        </form>
+
+        <a asp-controller="Category" asp-action="Index" class="btn btn-sm btn-outline-secondary">Volver</a>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ensure client-side validation scripts are loaded -->
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}
+
+<script>
+    let inputElement = document.getElementById('myInput');
+    let buttonElement = document.getElementById('myButton');
+
+
+    inputElement.addEventListener('input', (e) => {
+      if (!e.target.value || e.target.value.trim() === '') {
+        buttonElement.disabled = true; 
+        buttonElement.classList.remove("btn-success");
+        buttonElement.classList.add("btn-secondary");
+      } else {
+        buttonElement.disabled = false;
+        buttonElement.classList.remove("btn-secondary");
+        buttonElement.classList.add("btn-success");
+      }
+    })
+</script>

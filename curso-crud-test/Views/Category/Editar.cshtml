@@ -1,0 +1,62 @@
+@{
+  ViewData["title"] = "Editar Categoria";
+}
+@model CRUD_TEST.DTOs.CategoryDTO
+
+
+<div class="row">
+  <div class="offset-12">
+    <div class="card border">
+      <div class="card-header bg-black">
+        <h3 class="text-white"><strong>Edicion de Categorias</strong></h3>
+      </div>
+      <div class="card-body">
+
+        <form asp-action="Editar">
+
+          <input type="hidden" asp-for="Id" />
+
+          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+          
+            <div class="form-group">
+              <label asp-for="Name" class="control-label">Nombre <sub>*</sub></label>
+              <input asp-for="Name" id="myInput" class="form-control" placeholder="Ingrese el nombre de la categoria" type="text" value="@Model.Name">
+              <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+          
+          <br>
+
+          <data class="form-group mt-3">
+            <button type="submit" id="myButton" disabled class="btn btn-secondary d-block mx-auto">Editar</button>
+          </data>
+        </form>
+
+        <a asp-controller="Category" asp-action="Index" class="btn btn-sm btn-outline-secondary">Volver</a>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}
+
+<script>
+    let inputElement = document.getElementById('myInput');
+    let buttonElement = document.getElementById('myButton');
+
+
+    inputElement.addEventListener('input', (e) => {
+      if (!e.target.value || e.target.value.trim() === '') {
+        buttonElement.disabled = true; 
+        buttonElement.classList.remove("btn-warning");
+        buttonElement.classList.add("btn-secondary");
+      } else {
+        buttonElement.disabled = false;
+        buttonElement.classList.remove("btn-secondary");
+        buttonElement.classList.add("btn-warning");
+      }
+    })
+</script>

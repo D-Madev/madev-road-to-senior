@@ -1,0 +1,50 @@
+@{
+  ViewData["title"] = "Detalles Items";
+}
+@model IEnumerable<CRUD_TEST.Models.Item>
+
+
+<h3>Items</h3>
+
+<hr>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="col-md-1 border bg-dark text-white text-center">N°</th>
+      <th class="col-md-1 border bg-dark text-white text-center">Nombre</th>
+      <th class="col-md-1 border bg-dark text-white text-center">Precio</th>
+      <th class="col-md-1 border bg-dark text-white text-center">N° Serie</th>
+      <th class="col-md-1 border bg-dark text-white text-center">Categoria</th>
+      <th class="col-md-1 border bg-dark text-white text-center">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var item in Model)
+    {
+      <tr>
+        <td class="border text-center">@item.Id</td>
+        <td class="border text-center">@item.Name</td>
+        <td class="border text-center">$ @item.Price</td>
+        <td class="border text-center">@item.SerialNumber.Name</td>
+        <td class="border text-center">@item.Category.Name</td>
+        <td class="border text-center">
+          <a class="btn btn-sm btn-outline-info" asp-route-id="@item.Id" asp-area="" asp-controller="Item" asp-action="Details"><i class="fa-solid fa-eye"></i></a>
+          <a class="btn btn-sm btn-outline-warning" asp-route-id="@item.Id" asp-area="" asp-controller="Item" asp-action="Update"><i class="fa-solid fa-pen"></i></a>
+          <a class="btn btn-sm btn-outline-danger" asp-route-id="@item.Id" asp-area="" asp-controller="Item" asp-action="Delete"><i class="fa-solid fa-trash"></i></a>
+        </td>
+      </tr>
+    }
+    <tr>
+      <td colspan="6" id="row-create" class="border text-center">
+        <a class="btn btn-sm" style="width: 100%;" asp-area="" asp-controller="Category" asp-action="Crear"><i class="fa-solid fa-plus"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<style>
+  #row-create:hover {
+    background-color: rgb(219, 252, 209);
+  }
+</style>

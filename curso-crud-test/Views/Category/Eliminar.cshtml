@@ -1,0 +1,41 @@
+@{
+  ViewData["title"] = "Eliminar Categoria";
+}
+@model CRUD_TEST.DTOs.CategoryDTO
+
+
+<div class="row">
+  <div class="offset-12">
+    <div class="card border">
+      <div class="card-header bg-black">
+        <h3 class="text-white"><strong>Eliminacion de Categorias</strong></h3>
+      </div>
+      <div class="card-body">
+
+        <form asp-action="Eliminar">
+
+          <input type="hidden" asp-for="Id" />
+          
+            <div class="form-group">
+              <label asp-for="Name" class="control-label">Nombre</label>
+              <input asp-for="Name" id="myInput" class="form-control" placeholder="Ingrese el nombre de la categoria" type="text" value="@Model.Name" readonly>
+            </div>
+          
+          <br>
+
+          <data class="form-group mt-3">
+            <button 
+              type="submit" 
+              id="myButton" 
+              class="btn btn-danger d-block mx-auto" 
+              onclick="return confirm('¿Estás seguro que quieres eliminar esta categoría? Esta acción no se puede deshacer.');">
+              Eliminar</button>
+          </data>
+        </form>
+
+        <a asp-controller="Category" asp-action="Index" class="btn btn-sm btn-outline-secondary">Volver</a>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+@model IEnumerable<CRUD_TEST.Models.Category>
+@{
+  ViewData["title"] = "Home Categories";
+}
+
+
+<h3>Categories</h3>
+
+<hr>
+
+@if (Model != null)
+{
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="col-md-1 border bg-dark text-white text-center">@Html.DisplayNameFor(m => m.Id)</th>
+        <th class="col-md-1 border bg-dark text-white text-center">@Html.DisplayNameFor(m => m.Name)</th>
+        <th class="col-md-1 border bg-dark text-white text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var category in Model)
+      {
+        <tr>
+          <td class="border text-center">@category.Id</td>
+          <td class="border text-center">@category.Name</td>
+          <td class="border text-center">
+            <a class="btn btn-sm btn-outline-info" asp-route-id="@category.Id" asp-area="" asp-controller="Category" asp-action="Detalles"><i class="fa-solid fa-eye"></i></a>
+            <a class="btn btn-sm btn-outline-warning" asp-route-id="@category.Id" asp-area="" asp-controller="Category" asp-action="Editar"><i class="fa-solid fa-pen"></i></a>
+            <a class="btn btn-sm btn-outline-danger" asp-route-id="@category.Id" asp-area="" asp-controller="Category" asp-action="Eliminar"><i class="fa-solid fa-trash"></i></a>
+          </td>
+        </tr>
+      }
+    <tr>
+      <td colspan="3" id="row-create" class="border text-center">
+        <a class="btn btn-sm" style="width: 100%;" asp-area="" asp-controller="Category" asp-action="Crear"><i class="fa-solid fa-plus"></i></a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+}
+else
+{
+  <br>  
+  <div style="display: flex; justify-content: center; align-items: center;">
+    <img src="./fallback-items.png" style="height: 700px; width: 500px;"> 
+  </div>
+}
+
+
+<style>
+  #row-create:hover {
+    background-color: rgb(219, 252, 209);
+  }
+</style>
