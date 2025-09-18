@@ -100,4 +100,4 @@ Este es un repositorio **personal de seguimiento**, pero puedes:
 
 ## Licencia
 
-MIT License © Matias Seba Mall (D-Madev)
+MIT License © Matias Seba Mallo (D-Madev)
