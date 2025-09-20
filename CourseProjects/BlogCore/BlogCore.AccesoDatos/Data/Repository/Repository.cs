@@ -47,7 +47,7 @@ namespace BlogCore.AccesoDatos.Data.Repository
             return _Set.Find(id);
         }
 
-        public T GetFirstOrDefault(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public T? GetFirstOrDefault(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<T> query = _Set;
             if (filter != null) query = query.Where(filter);
@@ -67,7 +67,7 @@ namespace BlogCore.AccesoDatos.Data.Repository
 
         public void Remove(int id)
         {
-            T entityToRemove = _Set.Find(id);
+            T? entityToRemove = _Set.Find(id);
             if (entityToRemove != null) Remove(entityToRemove);
         }
 

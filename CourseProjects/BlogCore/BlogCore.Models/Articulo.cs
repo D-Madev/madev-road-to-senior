@@ -28,12 +28,12 @@ namespace BlogCore.Models
 
         [DataType(DataType.ImageUrl)]
         [Display(Name = "Imagen")]
-        public string UrlImagen { get; set; }
+        public string UrlImagen { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "La categoría es obligatoria")]
         public int CategoriaId { get; set; }
 
         [ForeignKey("CategoriaId")]
-        public Categoria Categoria { get; set; }
+        public required Categoria Categoria { get; set; }
     }
 }
