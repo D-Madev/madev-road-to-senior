@@ -1,0 +1,52 @@
+
+name: CI (main)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore
+        working-directory: CourseProjects/BlogCore
+        run: dotnet restore
+
+      - name: Build
+        working-directory: CourseProjects/BlogCore
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run tests (if any)
+        working-directory: CourseProjects/BlogCore
+        run: |
+          set -e
+          tests=$(find . -type f \( -name "*Test*.csproj" -o -name "*Tests*.csproj" \) -print)
+          if [ -z "$tests" ]; then
+            echo "No test projects found - skipping tests"
+          else
+            for t in $tests; do
+              echo "Running tests for: $t"
+              dotnet test "$t" --no-build --verbosity normal
+            done
+          fi
