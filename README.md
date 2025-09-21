@@ -4,7 +4,7 @@
 ![Language](https://img.shields.io/badge/Language-C%23-8A2BE2)
 ![Framework](https://img.shields.io/badge/Framework-.NET%208-8A2BE2)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
-![Build Status](https://img.shields.io/github/actions/workflow/status/D-Madev/madev-road-to-senior/dotnet.yml?branch=main)
+![Build Status](https://img.shields.io/github/actions/workflow/status/D-Madev/madev-road-to-senior/ci-main.yml?branch=main)
 ![Coverage](https://img.shields.io/badge/Coverage-0%25-red) 
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
