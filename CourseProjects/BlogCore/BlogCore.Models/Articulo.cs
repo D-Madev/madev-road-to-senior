@@ -28,6 +28,7 @@ namespace BlogCore.Models
 
         [DataType(DataType.ImageUrl)]
         [Display(Name = "Imagen")]
+        [NotNull]
         public string UrlImagen { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "La categoría es obligatoria")]
