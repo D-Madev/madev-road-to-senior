@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Folder Include="ViewModels\" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
 </Project>
