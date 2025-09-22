@@ -7,23 +7,23 @@
 <br />
 <h3 class="text-center">Crear una nueva Categoría</h3>
 <form method="POST" asp-action="Create">
-	<div class="row px-2 offset-1 border">
+	<div class="row px-2 border">
 		
-		<div class="col-10 offset-1 mt-4">
+		<div class="row mt-4">
 			<div class="form-group row">
 				<label asp-for="Nombre"></label>
 			</div>
-			<div class="col-8">
+			<div class="row">
 				<input asp-for="Nombre" class="form-control" placeholder="Ingresa el nombre" />
 				<span asp-validation-for="Nombre" class="text-danger"></span>
 			</div>
 		</div>
 
-		<div class="col-10 offset-1 mt-4">
+		<div class="row mt-4">
 			<div class="form-group row">
 				<label asp-for="Orden"></label>
 			</div>
-			<div class="col-8">
+			<div class="row">
 				<input asp-for="Orden" class="form-control" placeholder="Ingresa la orden" />
 				<span asp-validation-for="Orden" class="text-danger"></span>
 			</div>
@@ -33,7 +33,7 @@
 		<br />
 
 		<div class="form-group-row">
-			<div class="col-8">
+			<div class="row">
 				<partial name="_VistaCrearVolver" />
 			</div>
 		</div>
