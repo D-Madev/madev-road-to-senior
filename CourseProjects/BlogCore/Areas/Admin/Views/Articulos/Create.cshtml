@@ -1,0 +1,89 @@
+﻿@{
+	ViewData["title"] = "Crear Articulo";
+}
+@model BlogCore.Models.ViewModels.ArticuloViewModel;
+
+<br />
+<br />
+<h3 class="text-center">Crear un nuevo Articulo</h3>
+<form method="POST" asp-action="Create" enctype="multipart/form-data">
+	<div class="row px-2 offset-1 border">
+
+		<div class="col-10 offset-1 mt-4">
+			<div class="form-group row">
+				<label asp-for="Articulo.Nombre"></label>
+			</div>
+			<div class="row">
+				<input asp-for="Articulo.Nombre" class="form-control" placeholder="Ingresa el nombre" />
+				<span asp-validation-for="Articulo.Nombre" class="text-danger"></span>
+			</div>
+		</div>
+
+		<div class="col-10 offset-1 mt-4">
+			<div class="form-group row">
+				<label asp-for="Articulo.Descripcion"></label>
+			</div>
+			<div class="row">
+				<textarea asp-for="Articulo.Descripcion" class="form-control" style="height: 200px;"></textarea>
+				<span asp-validation-for="Articulo.Descripcion" class="text-danger"></span>
+			</div>
+		</div>
+
+		<div class="col-10 offset-1 mt-4">
+			<div class="form-group row">
+				<label asp-for="Articulo.UrlImagen"></label>
+			</div>
+			<div class="row">
+				<input type="file" name="archivo" class="form-control" id="fileUploaded"/>
+				<span asp-validation-for="Articulo.UrlImagen" class="text-danger"></span>
+			</div>
+		</div>
+
+		<div class="col-10 offset-1 mt-4">
+			<div class="form-group row">
+				<label for="Categoria">Categoría</label>
+			</div>
+			<div class="row">
+				@Html.DropDownListFor(m =>
+					m.Articulo.CategoriaId,
+					Model.ListaCategorias,
+					"-Seleccione una categoria-",
+					new { @class = "form-control" }
+				)		
+				<span asp-validation-for="Articulo.CategoriaId" class="text-danger"></span>
+			</div>
+		</div>
+		<br />
+
+		<div asp-validation-summary="All" class="text-danger mt-4"></div>
+		<br />
+		<div class="row">
+			<div class="rol mt-4">
+				<button type="submit" class="btn btn-sm btn-success form-control">
+					Crear Articulo
+				</button>
+			</div>
+			&nbsp;
+			<div class="col mt-4">
+				<a asp-action="Index" class="btn btn-sm btn-outline-secondary form-control">Volver atrás</a>
+			</div>
+		</div>
+	</div>
+</form>
+
+@section Scripts {
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+
+	<script src="https://cdn.tiny.cloud/1/ TU_API_KEY /tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+	<script>
+		tinymce.init({
+		  selector: '#Descripcion',
+		  plugins: 'lists link image',
+		  menubar: false
+		});
+	</script>
+
+
+}
