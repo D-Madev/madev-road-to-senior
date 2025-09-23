@@ -17,7 +17,7 @@ namespace BlogCore.AccesoDatos.Data.Repository.IRepository
             string? includeProperties = null
         );
 
-        T GetFirstOrDefault(
+        T? GetFirstOrDefault(
             Expression<Func<T, bool>>? filter = null,
             string? includeProperties = null
         );

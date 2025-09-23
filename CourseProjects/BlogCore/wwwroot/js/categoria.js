@@ -16,11 +16,11 @@ $(document).ready(function () {
                 render: function (data) {
                     return `
                         <div class="text-center">
-                            <a href="/Admin/Categorias/Edit/${data}" class="btn btn-sm btn-warning" style="width:100px">
+                            <a href="/Admin/Categorias/Edit/${data}" class="btn btn-sm btn-warning">
                                 <i class="far fa-edit"></i> Editar
                             </a>
                             &nbsp;
-                            <button class="btn btn-sm btn-danger btn-delete" data-url="/Admin/Categorias/Delete/${data}" style="width:100px">
+                            <button class="btn btn-sm btn-danger btn-delete" data-url="/Admin/Categorias/Delete/${data}">
                                 <i class="far fa-trash-alt"></i> Borrar
                             </button>
                         </div>

@@ -14,7 +14,7 @@
 			<div class="form-group row">
 				<label asp-for="Nombre"></label>
 			</div>
-			<div class="col-8">
+			<div class="row">
 				<input asp-for="Nombre" class="form-control" placeholder="Ingresa el nombre" value="@Model.Nombre"/>
 				<span asp-validation-for="Nombre" class="text-danger"></span>
 			</div>
@@ -24,7 +24,7 @@
 			<div class="form-group row">
 				<label asp-for="Orden"></label>
 			</div>
-			<div class="col-8">
+			<div class="row">
 				<input asp-for="Orden" class="form-control" placeholder="Ingresa la orden" value="@Model.Orden" />
 				<span asp-validation-for="Orden" class="text-danger"></span>
 			</div>
@@ -39,9 +39,8 @@
 					Editar Categoría
 				</button>
 			</div>
-			&nbsp;
 			<div class="col mt-4">
-				<a asp-action="Index" class="btn btn-sm btn-success form-control">Volver atrás</a>
+				<a asp-action="Index" class="btn btn-sm btn-outline-secondary form-control">Volver atrás</a>
 			</div>
 		</div>
 		<br />
