@@ -21,6 +21,7 @@ $(document).ready(function () {
             },
             columns: [
                 { data: 'id', width: '1%' },
+                { data: 'urlImagen', render: (img) => `<img src="../${img}" width="120">`, width: '1%' },
                 { data: 'nombre', width: '5%' },
                 { data: 'descripcion', width: '5%' },
                 { data: 'categoria.nombre', width: '5%' },
@@ -35,11 +36,11 @@ $(document).ready(function () {
 
                         return `
                             <div class="text-center">
-                                <a href="/Admin/Articulos/Edit/${data}" class="btn btn-sm btn-warning" style="width:100px">
+                                <a href="/Admin/Articulos/Edit/${data}" class="btn btn-sm btn-warning">
                                     <i class="far fa-edit"></i> Editar
                                 </a>
                                 &nbsp;
-                                <button class="btn btn-sm btn-danger btn-delete" data-url="/Admin/Articulos/Delete/${data}" style="width:100px">
+                                <button class="btn btn-sm btn-danger btn-delete" data-url="/Admin/Articulos/Delete/${data}" >
                                     <i class="far fa-trash-alt"></i> Borrar
                                 </button>
                             </div>
