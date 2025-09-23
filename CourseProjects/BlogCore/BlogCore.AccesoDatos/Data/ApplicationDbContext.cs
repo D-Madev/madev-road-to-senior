@@ -13,5 +13,6 @@ namespace BlogCore.Data
 
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Articulo> Articulos { get; set; }
+        public DbSet<Slider> Sliders { get; set; }
     }
 }
