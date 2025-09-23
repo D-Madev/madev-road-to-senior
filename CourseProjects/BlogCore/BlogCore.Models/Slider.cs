@@ -21,6 +21,7 @@ namespace BlogCore.Models
         public bool estado { get; set; } = false;
 
         [NotNull]
+        [DataType(DataType.ImageUrl)]
         [Required(ErrorMessage = "La imagen es obligatoria.")]
         public string UrlImagen { get; set; } = string.Empty;
     }
