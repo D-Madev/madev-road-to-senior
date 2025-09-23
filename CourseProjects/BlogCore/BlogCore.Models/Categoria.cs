@@ -14,7 +14,7 @@ namespace BlogCore.Models
 
         [Required(ErrorMessage = "Ingrese un nombre para la categoría")]
         [Display(Name = "Nombre de Categoría")]
-        public string Nombre { get; set; }
+        public required string Nombre { get; set; }
 
         [Display(Name = "Orden de Visualización")]
         [Range(1, 100, ErrorMessage = "El valor debe estar entre 1 y 100")]
