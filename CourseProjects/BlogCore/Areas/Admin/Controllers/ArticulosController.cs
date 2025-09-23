@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using BlogCore.AccesoDatos.Data.Repository.IRepository;
+using BlogCore.Models;
 using BlogCore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -139,6 +140,17 @@ namespace BlogCore.Areas.Admin.Controllers
 
             artVM.ListaCategorias = _contenedorTrabajo.Categoria.GetListaCategorias();
             return View(artVM);
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            Articulo? articulo = _contenedorTrabajo.Articulo.Get(id);
+            if (articulo == null) return Json(new { success = false, message = "Error borrando Articulo" });
+
+            _contenedorTrabajo.Articulo.Remove(articulo);
+            _contenedorTrabajo.Save();
+            return Json(new { success = true, message = "Articulo borrado correctamente" });
         }
 
         #region Llamadas a la API
