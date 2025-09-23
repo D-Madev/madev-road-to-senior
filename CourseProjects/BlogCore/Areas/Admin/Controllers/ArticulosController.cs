@@ -74,6 +74,73 @@ namespace BlogCore.Areas.Admin.Controllers
             return View(artVM);
         }
 
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            ArticuloViewModel ArtVM = new ArticuloViewModel()
+            {
+                Articulo = new Models.Articulo(),
+                ListaCategorias = _contenedorTrabajo.Categoria.GetListaCategorias()
+            };
+
+            if (id != null) ArtVM.Articulo = _contenedorTrabajo.Articulo.Get(id.GetValueOrDefault());
+
+            return View(ArtVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(ArticuloViewModel artVM)
+        {
+            // Si el modelo es invalido, falla 
+            if (ModelState.IsValid)
+            {
+                // Nuevo Articulo
+                string rutaPrincipal = _hostingEnviroment.WebRootPath;
+                var archivos = HttpContext.Request.Form.Files;
+
+                var articuloDesdeBd = _contenedorTrabajo.Articulo.Get(artVM.Articulo.Id);
+                // Si el articulo no es nuevo, falla 
+                // Si no se ingresó un archivo, falla   
+                if (archivos.Count() > 0)
+                {
+                    // Nueva imagen para el articulo
+                    string nombreArchivo = Guid.NewGuid().ToString();
+                    var subidas = Path.Combine(rutaPrincipal, @"imgs\articulos");
+                    var extension = Path.GetExtension(archivos[0].FileName);
+
+                    var rutaImagen = Path.Combine(rutaPrincipal, articuloDesdeBd.UrlImagen.TrimStart('\\'));
+                    if (System.IO.File.Exists(rutaImagen)) System.IO.File.Delete(rutaImagen);
+
+                    // Nuevamente subimos el archivo
+                    using (var fileStreams = new FileStream(Path.Combine(subidas, nombreArchivo + extension), FileMode.Create))
+                    {
+                        archivos[0].CopyTo(fileStreams);
+                    }
+
+                    artVM.Articulo.UrlImagen = @"\imgs\articulos\" + nombreArchivo + extension;
+
+                    // Guardamos las operaciones
+                    _contenedorTrabajo.Articulo.Update(artVM.Articulo);
+                    _contenedorTrabajo.Save();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    // Cuando queremos conservar la imagen previa
+                    artVM.Articulo.UrlImagen = articuloDesdeBd.UrlImagen;
+                }
+                
+                _contenedorTrabajo.Articulo.Update(artVM.Articulo);
+                _contenedorTrabajo.Save();
+                return RedirectToAction(nameof(Index));
+            }
+
+            artVM.ListaCategorias = _contenedorTrabajo.Categoria.GetListaCategorias();
+            return View(artVM);
+        }
+
         #region Llamadas a la API
         [HttpGet]
         public IActionResult GetAll()
