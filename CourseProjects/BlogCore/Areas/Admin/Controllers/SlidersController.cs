@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogCore.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class SlidersController : Controller
     {
         private readonly IContenedorTrabajo _contenedorTrabajo;
