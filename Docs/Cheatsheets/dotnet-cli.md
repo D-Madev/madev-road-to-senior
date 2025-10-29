@@ -171,6 +171,20 @@
 
 ---
 
+## 🔹 Comandos para usar con Entity Framework
+
+- `dotnet ef migrations add <name-of-migration>`
+  Creamos una migracion con el nombre name-of-migration.
+
+- `dotnet ef migrations add <name-of-migration> -c <name-of-context> -s <name-of-dir-where-startup-is>`
+  Es importante destacar que estos comandos se tienen que ejecutar en la base del proyecto que contiene las migraciones habitualmente este proyecto es el DAL -> La capa de acceso a datos. 
+  Pero tambien hay que destacar que nos puede dar un error si tenemos mas de un contexto de la base de datos y si el archivo startup no está en el mismo directorio que las migraciones. 
+  Para tales situaciones se puede adaptar el comando anterior de la manera detallada arriba.
+  La -c tambien se puede usar como --context
+  La -s hace referencia al archivo startup
+
+---
+
 ## 🔹 Ejemplos de uso
 
 - `dotnet ef migrations add <name-of-migration>`  
