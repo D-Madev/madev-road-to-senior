@@ -202,4 +202,21 @@ The `Program.cs` file is the **Entry Point** (punto de entrada) of your .NET Cor
 
 The **Question 8** is: *What is Kestrel, and why is it used in .NET Core?*
 
-Kestrel is essential in ASP.NET Core. Do you know if Kestrel is a **web server** (like Apache or IIS) or if it is a component that **talks to the database** (like Entity Framework)?
+### 💻 Kestrel: The Web Server
+
+* **What it is:** *Kestrel* is the *Web Server* for ASP.NET Core.
+* **Analogy:** If your application is the house, *Kestrel* is the *Front Door*.
+* **The Job:** *Kestrel* job is to *listen* for HTTP requests from the internet.
+    * When a user sends a request (a mouse click, a form submit), *Kestrel* is the first component that *receives* it.
+    * It then passes the request to the *Middleware Pipeline* (the `Configure` steps we discussed).
+* **Why it is used:** It is very *fast* and *Cross-Platform*. It is included with your .NET application, so you do not need to install a separate big server like Apache or IIS (Internet Information Services) just to run your application.
+
+---
+
+### 🛣️ Routing
+
+Pregunta 9: *Explain the concept of routing in ASP.NET Core.*.
+
+Kestrel brings the request **inside** your application. The next job is **Routing** 
+
+Once the request is inside, the system needs to decide **which Controller action** should run. For example, if the user goes to `/products/100`, the system must run the `GetProduct(100)` method.
