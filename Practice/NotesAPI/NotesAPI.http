@@ -1,0 +1,13 @@
+@hostAddrs = http://localhost:5257
+
+# Default test endpoint hardcoded in program.cs
+GET {{hostAddrs}}/weatherforecast/
+Accept: application/json
+
+###
+
+# Test Static Notes endpoint
+GET {{hostAddrs}}/Notes/
+Accept: application/json
+
+###
