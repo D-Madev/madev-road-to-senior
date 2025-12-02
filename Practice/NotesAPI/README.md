@@ -15,10 +15,13 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | :--- | :--- | :--- | :--- |
 | **✅** | N/A (Inicio de Proyecto) | 1. Crear el `Note` Model | **Estructura básica** y modelos de datos. |
 | **✅** | 1. Crear el `Note` Model | 2. Crear el `NotesController` | **Q9: Routing** (Rutas de la API). |
-| **✅** | 2. Crear el `NotesController` | 3. Implementar el `Repository` | **Q19/Q4: Lifetimes** (usa `AddSingleton` para la lista fija). |
+| **✅** | 2. Crear el `NotesController` | 3. Implementar el `Repository` y uso de DI | **Q19/Q4: Lifetimes** (usa `AddSingleton` para la lista fija). |
 | **✅** | 3. Implementar el `Repository` | **Finalizamos etapa 1.5** | **Q7, Q9, Q19 (DI)**	Setup Inicial y Routing |
-| **IN PROGRESS** | N/A (Fin de etapa 1.5) | 4. Iniciamos Etapa 2 | ... |
-
+| **✅** | **Finalizamos etapa 1.5** | 4. Instalar Entity Framework Core (EF Core) y configurar el DbContext. | **Q12:** EF Core (Configuración de Base de Datos). |
+| **✅** | 4. Instalar Entity Framework Core (EF Core) y configurar el DbContext. | 5. Implementar async y await en el método Get() y crear datos iniciales. | **Q14** (Programación Asíncrona) |
+| **✅** | 5. Implementar async y await en el método Get() y crear datos iniciales. | 6. Implementar async y await en el método Post(). | **Q14** (Programación Asíncrona) |
+| **✅** | 6. Implementar async y await en el método Post(). | **Finalizamos etapa 2** | **Q12, Q14, Q10** |
+| **✅** | **Finalizamos etapa 2** | 7. Implementar un Global Exception Handler. | **Q23:** Global Exception Handling (Middleware). |
 ---
 
 ## 📋 Plan de Acción Incremental (Roadmap)
@@ -49,14 +52,14 @@ Empieza creando una nueva solución **ASP.NET Core Web API**.
 
 | ✅ | Tarea (Task) | Concepto Cubierto | Estado |
 | :--- | :--- | :--- | :--- |
-| $\square$ | 4. Instalar **Entity Framework Core** (EF Core) y configurar el `DbContext` con una base de datos local (ej: **SQLite** o **InMemory**). | **Q12: EF Core** (Configuración de Base de Datos). | |
-| $\square$ | 5. Registrar tu `DbContext` en `Program.cs` / `Startup.cs` usando el **Lifetime** `services.AddScoped`. | **Q19: Scoped Lifetime** (Fundamental para DB Context). | |
-| $\square$ | 6. Migrar el método `Get()` del `Controller` para usar **EF Core** y obtener las notas. | **Q14: Asynchronous Programming** (Empieza a usar `ToListAsync()`). | |
-| $\square$ | 7. Crea el método `POST` (Crear Nota) asegurándote de usar **Async** (`CreateAsync`, `SaveChangesAsync`). | **Q14: Async** (Mejora la **Performance**). | |
+| **✅** | 4. Instalar **Entity Framework Core** (EF Core) y configurar el `DbContext` con una base de datos local (ej: **SQLite** o **InMemory**). | **Q12: EF Core** (Configuración de Base de Datos). | |
+| **✅** | 5. Registrar tu `DbContext` en `Program.cs` / `Startup.cs` usando el **Lifetime** `services.AddScoped`. | **Q19: Scoped Lifetime** (Fundamental para DB Context). | |
+| **✅** | 6. Migrar el método `Get()` del `Controller` para usar **EF Core** y obtener las notas. | **Q14: Asynchronous Programming** (Empieza a usar `ToListAsync()`). | |
+| **✅** | 7. Crea el método `POST` (Crear Nota) asegurándote de usar **Async** (`CreateAsync`, `SaveChangesAsync`). | **Q14: Async** (Mejora la **Performance**). | |
 
 ### III. Arquitectura y Estabilidad (Fase 3: Advanced)
 
-| ✅ | Tarea (Task) | Concepto Cubierto | Estado |
+| $\square$ | Tarea (Task) | Concepto Cubierto | Estado |
 | :--- | :--- | :--- | :--- |
 | $\square$ | 8. Implementar un **Global Exception Handler** para manejar errores como 404 (Not Found). | **Q23: Global Exception Handling** (Middleware). | |
 | $\square$ | 9. Configurar **Health Checks** para el servicio. La *health check* debe verificar el estado de la base de datos. | **Q20: Health Checks** (Monitoreo). | |

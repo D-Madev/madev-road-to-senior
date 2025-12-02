@@ -21,9 +21,8 @@ Este es tu mapa, basado en tu lista:
 
 ### 🚀 Let's Start: Phase 1 (Easy)
 
-**Pregunta 1**: *What is .NET Core, and how does it differ from .NET Framework?*
-
-#### **1. .NET Core vs. .NET Framework**
+#### **Pregunta 1**: *What is .NET Core, and how does it differ from .NET Framework?*
+**1. .NET Core vs. .NET Framework**
 
 * **.NET Framework:**
     * It is **old** (legacy).
@@ -42,9 +41,7 @@ Este es tu mapa, basado en tu lista:
 
 ### 🏠 The Startup.cs File
 
-**Pregunta 2**: *What is the role of the Startup class?*
-
-#### **2. The Startup Class**
+#### **Pregunta 2**: *What is the role of the Startup class?*
 
 Think of your application like a **Restaurant**. The `Startup.cs` is the **Manager's Morning Checklist**. It runs only **once** when you open the restaurant (start the app).
 
@@ -87,11 +84,9 @@ Imagine a **Water Pipe** or an **Assembly Line**. When a request comes in, it fl
 
 ---
 
-### 💉 Dependency Injection (DI)
+#### **4. Dependency Injection (DI)**
 
 **Pregunta 4**: *How do you configure dependency injection in .NET Core?*
-
-#### **4. Dependency Injection (DI)**
 
 We configure Dependency Injection by calling simple methods in the `IServiceCollection` object (the list of tools).
 
@@ -126,7 +121,7 @@ We use these Lifetimes to control **Memory** and **Data Safety**:
 
 ### ⚙️ IConfiguration vs. IOptions
 
-**Pregunta 5**: *What is the difference between IConfiguration and IOptions in .NET Core?*
+#### **Pregunta 5**: *What is the difference between IConfiguration and IOptions in .NET Core?*
 
 We talked about configuration being good for **Singleton**. Configuration is how your app reads settings (like database passwords, API keys, etc.) from `appsettings.json`.
 
@@ -135,7 +130,7 @@ We talked about configuration being good for **Singleton**. Configuration is how
 
 Here is the key difference: one can **update** settings automatically while the app is running (without restarting the server!).
 
-#### 🔄 IOptions vs. IConfiguration
+### 🔄 IOptions vs. IConfiguration
 
 Here is the simple explanation:
 
@@ -148,10 +143,9 @@ Here is the simple explanation:
 **The key is `IOptions` gives you the settings as a clean C\# object.** This is much safer than reading strings from `IConfiguration`.
 
 -----
+### Appsettings.json
 
-### 💾 Question 6: appsettings.json
-
-Let's move to **Question 6**: *How does the `appsettings.json` file work in .NET Core?*
+#### **Question 6**: *How does the `appsettings.json` file work in .NET Core?*
 
 This file is where we store application **settings** (Configuración).
 
@@ -200,23 +194,119 @@ The `Program.cs` file is the **Entry Point** (punto de entrada) of your .NET Cor
 
 ## 🛠️ Phase 2: The Mechanics (Intermediate)
 
-The **Question 8** is: *What is Kestrel, and why is it used in .NET Core?*
+### Web Server (Kestrel)
 
-### 💻 Kestrel: The Web Server
+#### **Question 8**: What is Kestrel, and why is it used in .NET Core?
 
-* **What it is:** *Kestrel* is the *Web Server* for ASP.NET Core.
-* **Analogy:** If your application is the house, *Kestrel* is the *Front Door*.
-* **The Job:** *Kestrel* job is to *listen* for HTTP requests from the internet.
-    * When a user sends a request (a mouse click, a form submit), *Kestrel* is the first component that *receives* it.
-    * It then passes the request to the *Middleware Pipeline* (the `Configure` steps we discussed).
-* **Why it is used:** It is very *fast* and *Cross-Platform*. It is included with your .NET application, so you do not need to install a separate big server like Apache or IIS (Internet Information Services) just to run your application.
+**Explicacion**
+**Kestrel** is the **Web Server** for ASP.NET Core. It is the first component that **receives** the HTTP request from the Internet. Think of it as the **"Front Door"** of your application. It is used because it is **fast** (high performance), secure, and works on **many operating systems** (Cross-Platform).
+
+**Ejemplo**
+Imagine your application is a **Restaurant**. Kestrel is the **Host** that opens the door, receives the customer request (HTTP), and directs it inside the kitchen (the Middleware Pipeline).
+
+**Keytakeway**
+Kestrel is the built-in, cross-platform **HTTP Listener** that starts the request flow.
+
+
+| Bloque del Diagrama | Concepto Clave | Relación con la Arquitectura |
+| :--- | :--- | :--- |
+| **HTTP Request/click/events/...** | **El Cliente** | Es la petición que inicia el proceso, sea desde un navegador o cualquier otra aplicación. |
+| **Kestrel** | **Web Server (Q8)** | Kestrel es el primer componente que **recibe y traduce** esa petición HTTP, pasándola al entorno de .NET. |
+| **Middleware Pipeline** | **Flujo del Request (Q10)** | Es la lista ordenada de componentes que procesaste con `app.Use...` en `Program.cs`. Aquí es donde se manejan CORS (Q11), Autenticación, y **Routing** (Q9). |
+| **.NET Solution** | **El Código Final** | Si la petición pasa todos los *Middlewares*, finalmente llega a tu **Controller** y al código que usa tu **Repository** y el **DbContext** (Fase 2). |
+
+![Lifecycle of a HTTP Request in .NET Core](./img/lifecycle_of_http_requests.png)
 
 ---
 
-### 🛣️ Routing
+### Traffic Control
 
-Pregunta 9: *Explain the concept of routing in ASP.NET Core.*.
+#### **Question 9**: Explain the concept of routing in ASP.NET Core.
 
-Kestrel brings the request **inside** your application. The next job is **Routing** 
+**Explicacion**
+**Routing** is the **Map** inside your application. It looks at the **URL address** (like `/notes/5`) and the **HTTP Verb** (GET, POST) and decides **which Controller method** must execute. It is the system that directs the traffic to the right piece of C# code.
 
-Once the request is inside, the system needs to decide **which Controller action** should run. For example, if the user goes to `/products/100`, the system must run the `GetProduct(100)` method.
+**Ejemplo**
+If the request is **POST** to `/notes`, Routing knows this must go to the `NotesController`'s `Post()` method. If the request is **GET** to `/notes/10`, Routing extracts the ID (`10`) and sends it to the `Get(int id)` method.
+
+**Keytakeway**
+Routing is the link between the **URL** and the **C# Method**.
+
+---
+
+### Startup Configuration (DI & Pipeline)
+
+#### **Question 10**: What is the purpose of ConfigureServices and Configure methods in the Startup class?
+
+**Explicacion**
+These methods define how the application runs (now mostly merged into `Program.cs`):
+* **`ConfigureServices`** (the `builder.Services` part): This is where you register all the application **tools** (services) for **Dependency Injection (DI)**.
+* **`Configure`** (the `app.Use...` part): This sets the **pipeline** (the order of steps/Middleware) for the request flow.
+
+**Ejemplo**
+**`ConfigureServices`** registers the database tool (`AddDbContext`). **`Configure`** adds the security check (`UseAuthorization`) *before* the Routing to ensure security runs first.
+
+**Keytakeway**
+**`Services`** = Tools/DI setup. **`Configure`** = Middleware Order/Pipeline setup.
+
+---
+
+### Web Security
+
+#### **Question 11**: How does ASP.NET Core handle cross-origin resource sharing (CORS)?
+
+**Explicacion**
+**CORS** is a **security rule** for web browsers that stops a website on one domain (e.g., `siteA.com`) from calling your API on a different domain (`yourAPI.com`) unless you specifically allow it. .NET handles this by adding a special **Middleware** (`app.UseCors()`) to the pipeline, where you specify **which domains** are safe to make calls.
+
+**Ejemplo**
+You configure CORS to allow requests only from your local React application at `http://localhost:3000` but block calls from any public domain on the internet.
+
+**Keytakeway**
+CORS is a **Middleware security check** for external **domains** that call the API.
+
+---
+
+### Database Communication
+
+#### **Question 12**: What are the benefits of using Entity Framework Core (EF Core) in .NET Core applications?
+
+**Explicacion**
+**EF Core** is a tool (an **ORM** - Object-Relational Mapper) that translates **C# objects** into **SQL code** and vice versa.
+* **Benefit 1 (No SQL):** You talk to the database using **C# objects** and C# syntax (LINQ) instead of writing raw SQL text.
+* **Benefit 2 (Migrations):** You can **change the database structure** (like adding a new column) using C# commands, not manual SQL commands.
+
+**Ejemplo**
+Instead of writing `SELECT * FROM Notes;` (SQL), you write `_context.Notes.ToList();` (C# code that EF Core translates).
+
+**Keytakeway**
+EF Core is the **Object-Relational Mapper** that simplifies database access using C# code.
+
+---
+
+### Background Tasks
+
+#### **Question 13**: Explain the role of the IHostedService interface in .NET Core and provide an example of how to implement it.
+
+**Explicacion**
+**IHostedService** is for **Background Tasks**. It allows you to run code **continuously** (always running) or on a **schedule**, separate from the normal API requests. It starts when the application starts and stops when the application stops.
+
+**Ejemplo**
+You implement `IHostedService` to create a service that **checks the database for pending emails** every 60 seconds and sends them. This task is always working in the background, without waiting for a user to click a button.
+
+**Keytakeway**
+IHostedService runs reliable, long-running **background jobs** within the host application.
+
+---
+
+### Performance and Scalability
+
+#### **Question 14**: How does ASP.NET Core support asynchronous programming?
+
+**Explicacion**
+.NET supports Async with the keywords **`async`** and **`await`**. This is used for slow operations (like talking to a database or external API). When a thread hits an `await` call, it **stops waiting** for the slow result and goes to serve **another user's request**.
+
+**Ejemplo**
+The server is waiting for the DB to save a note (which is slow). If it uses `await`, the thread is free to handle a **second user's request** while waiting for the database response.
+
+**Keytakeway**
+Async/Await prevents **thread blocking** to significantly increase server **scalability** (handling more users).

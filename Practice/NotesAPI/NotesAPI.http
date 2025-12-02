@@ -1,13 +1,39 @@
 @hostAddrs = http://localhost:5257
 
-# Default test endpoint hardcoded in program.cs
-GET {{hostAddrs}}/weatherforecast/
+GET {{hostAddrs}}/Notes/
 Accept: application/json
 
 ###
 
-# Test Static Notes endpoint
-GET {{hostAddrs}}/Notes/
+POST {{hostAddrs}}/Notes/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Title": "Another Note",
+  "Content": "This is the content of the ultimate note."
+}
+
+###
+
+GET {{hostAddrs}}/Notes/1
+Accept: application/json
+
+###
+
+PUT {{hostAddrs}}/Notes/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Id": 1,
+  "Title": "Updated Note",
+  "Content": "This is the content of a note updated."
+}
+
+###
+
+DELETE {{hostAddrs}}/Notes/2
 Accept: application/json
 
 ###
