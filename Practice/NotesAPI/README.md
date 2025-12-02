@@ -21,7 +21,11 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | 4. Instalar Entity Framework Core (EF Core) y configurar el DbContext. | 5. Implementar async y await en el método Get() y crear datos iniciales. | **Q14** (Programación Asíncrona) |
 | **✅** | 5. Implementar async y await en el método Get() y crear datos iniciales. | 6. Implementar async y await en el método Post(). | **Q14** (Programación Asíncrona) |
 | **✅** | 6. Implementar async y await en el método Post(). | **Finalizamos etapa 2** | **Q12, Q14, Q10** |
-| **✅** | **Finalizamos etapa 2** | 7. Implementar un Global Exception Handler. | **Q23:** Global Exception Handling (Middleware). |
+| **✅** | **Finalizamos etapa 2** | 7. Concretizacion final de la ABM de la API. | Completamos todos los metodos de la API. |
+| **✅** | 7. Concretizacion final de la ABM de la API. | 8. Implementar un Global Exception Handler en el Middleware Pipeline. | **Q23:** Global Exception Handling (Middleware). |
+| **✅** | 8. Implementar un Global Exception Handler en el Middleware Pipeline. | 9. Configurar Health Checks para el servicio, verificando el estado de la base de datos (NotesDbContext). | **Q20:** Health Checks (Monitoreo). |
+| **IN PROGRESS** | 9. Configurar Health Checks... | 10. Configurar una librería de Logging (ej: Serilog). | **Q18:** Centralized Logging (Observabilidad). |
+
 ---
 
 ## 📋 Plan de Acción Incremental (Roadmap)

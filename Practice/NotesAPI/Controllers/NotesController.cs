@@ -23,6 +23,9 @@ public class NotesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {
+        // Testing the global exception handling (Q23)
+        // throw new Exception("Tarea 8: Error de prueba para el manejo global de excepciones.");
+        
         return Ok(await _context.Notes.ToListAsync());
     }
 
