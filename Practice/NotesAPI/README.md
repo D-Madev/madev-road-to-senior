@@ -24,8 +24,8 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | **Finalizamos etapa 2** | 7. Concretizacion final de la ABM de la API. | Completamos todos los metodos de la API. |
 | **✅** | 7. Concretizacion final de la ABM de la API. | 8. Implementar un Global Exception Handler en el Middleware Pipeline. | **Q23:** Global Exception Handling (Middleware). |
 | **✅** | 8. Implementar un Global Exception Handler en el Middleware Pipeline. | 9. Configurar Health Checks para el servicio, verificando el estado de la base de datos (NotesDbContext). | **Q20:** Health Checks (Monitoreo). |
-| **IN PROGRESS** | 9. Configurar Health Checks... | 10. Configurar una librería de Logging (ej: Serilog). | **Q18:** Centralized Logging (Observabilidad). |
-
+| **✅** | 9. Configurar Health Checks... | 10. Configurar una librería de Logging (ej: Serilog). | **Q18:** Centralized Logging (Observabilidad). |
+| **✅** | 10. Configurar una librería de Logging (ej: Serilog). | 11. Refactorizar la lógica a un Service Layer. | **Q16:** Service Layer (Separación de Intereses). |
 ---
 
 ## 📋 Plan de Acción Incremental (Roadmap)
@@ -63,12 +63,12 @@ Empieza creando una nueva solución **ASP.NET Core Web API**.
 
 ### III. Arquitectura y Estabilidad (Fase 3: Advanced)
 
-| $\square$ | Tarea (Task) | Concepto Cubierto | Estado |
+| **✅** | Tarea (Task) | Concepto Cubierto | Estado |
 | :--- | :--- | :--- | :--- |
-| $\square$ | 8. Implementar un **Global Exception Handler** para manejar errores como 404 (Not Found). | **Q23: Global Exception Handling** (Middleware). | |
-| $\square$ | 9. Configurar **Health Checks** para el servicio. La *health check* debe verificar el estado de la base de datos. | **Q20: Health Checks** (Monitoreo). | |
-| $\square$ | 10. Configurar una librería de **Logging** (ej: Serilog) para enviar los logs a la consola o a un archivo. | **Q18: Centralized Logging** (Observabilidad). | |
-| $\square$ | 11. **(Microservices/Desarrollo)**: Refactorizar la lógica de negocio a un **separado Service Layer** (fuera del Controller). | **Q16: Microservices** (Prepara la arquitectura). | |
+| **✅** | 8. Implementar un **Global Exception Handler** para manejar errores como 404 (Not Found). | **Q23: Global Exception Handling** (Middleware). | |
+| **✅** | 9. Configurar **Health Checks** para el servicio. La *health check* debe verificar el estado de la base de datos. | **Q20: Health Checks** (Monitoreo). | |
+| **✅** | 10. Configurar una librería de **Logging** (ej: Serilog) para enviar los logs a la consola o a un archivo. | **Q18: Centralized Logging** (Observabilidad). | |
+| **✅** | 11. **(Microservices/Desarrollo)**: Refactorizar la lógica de negocio a un **separado Service Layer** (fuera del Controller). | **Q16: Microservices** (Prepara la arquitectura). | |
 
 ---
 

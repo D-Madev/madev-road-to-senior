@@ -5,6 +5,7 @@ using Serilog;
 using NotesAPI.Data;
 using NotesAPI.IRepository;
 using NotesAPI.Repository;
+using NotesAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,9 @@ builder.Services.AddDbContext<NotesDbContext>(options
 // Revisar salud de la API
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<NotesDbContext>(name: "NotesDb");
+
+// 11. Registrar el service layer
+builder.Services.AddScoped<INotesService, NotesService>();
 
 // Configurar el logger de serilog
 Log.Logger = new LoggerConfiguration()

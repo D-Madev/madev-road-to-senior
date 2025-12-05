@@ -5,15 +5,17 @@ using Microsoft.EntityFrameworkCore;
 using NotesAPI.Data;
 using NotesAPI.IRepository;
 using NotesAPI.Models;
+using NotesAPI.Services;
 
-[ApiController]            // 1. Tells ASP.NET Core: This is an API class.
-[Route("[controller]")]    // 2. Defines the URL path (e.g., /api/notes).
+[ApiController]
+[Route("[controller]")]
 public class NotesController : ControllerBase
 {
-    private readonly NotesDbContext _context;
     // private readonly INotesRepository _repository;
+    // private readonly NotesDbContext _context;
+    private readonly INotesService _service;
 
-    public NotesController(NotesDbContext context) => _context = context;
+    public NotesController(INotesService service) => _service = service;
 
     /*
      * El acceso a la base de datos es una operación lenta (I/O Bound). 
@@ -26,15 +28,14 @@ public class NotesController : ControllerBase
         // Testing the global exception handling (Q23)
         // throw new Exception("Tarea 8: Error de prueba para el manejo global de excepciones.");
         
-        return Ok(await _context.Notes.ToListAsync());
+        return Ok(await _service.GetAllAsync());
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
-        if (id <= 0) return BadRequest("El Id debe ser un número positivo mayor que cero.");
-
-        var note = await _context.Notes.FindAsync(id);
+        var note = await _service.GetByIdAsync(id);
+        
         if (note == null) return NotFound($"No se encontró una nota con Id = {id}.");
 
         return Ok(note);
@@ -50,29 +51,22 @@ public class NotesController : ControllerBase
          * ya intercepta esto y devuelve un error 400 Bad Request automáticamente, 
          * antes de que tu código se ejecute.
         */
-        if (newNote == null) return BadRequest("Debe envíar una nota, revise que se esté envíando correctamente la informacion.");
+        var createdNote = await _service.CreateAsync(newNote);
 
-        await _context.Notes.AddAsync(newNote);
-        await _context.SaveChangesAsync();
+        if (createdNote == null) return NotFound("Error al crear la nota.");
 
         // Devolver 201 Created (Convención RESTful)
         return Created($"/{ControllerContext.RouteData.Values["controller"]}/{newNote.Id}", newNote);
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateAsync([FromBody] Note noteUpdate)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAsync(int id, [FromBody] Note noteUpdate)
     {
-        if (noteUpdate == null || noteUpdate.Id <= 0) return BadRequest("Debe envíar una nota válida con un Id positivo mayor que cero.");
-        
-        var noteToUpdate = await _context.Notes.FindAsync(noteUpdate.Id);
-  
-        if (noteToUpdate == null) return NotFound($"No se encontró una nota con Id = {noteUpdate.Id}.");
-        
-        noteToUpdate.Title = noteUpdate.Title;
-        noteToUpdate.Content = noteUpdate.Content;
-        
-        //_context.Notes.Update(noteToUpdate);
-        await _context.SaveChangesAsync();
+        if (id != noteUpdate.Id) return BadRequest("IDs no coinciden");
+
+        var updated = await _service.UpdateAsync(id, noteUpdate);
+
+        if (!updated) return NotFound($"No se encontró una nota con Id = {id}.");
 
         return NoContent();
     }
@@ -80,13 +74,9 @@ public class NotesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        if (id <= 0) return BadRequest("El Id debe ser un número positivo mayor que cero.");
+        var deleted = await _service.DeleteAsync(id);
 
-        var noteToDelete = await _context.Notes.FindAsync(id);
-        if (noteToDelete == null) return NotFound($"No se encontró una nota con Id = {id}.");
-
-        _context.Notes.Remove(noteToDelete);
-        await _context.SaveChangesAsync();
+        if (!deleted) return NotFound($"No se encontró una nota con Id = {id}.");
 
         return NoContent();
     }

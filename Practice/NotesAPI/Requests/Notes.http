@@ -21,7 +21,7 @@ Accept: application/json
 
 ###
 
-PUT {{hostAddrs}}/Notes/
+PUT {{hostAddrs}}/Notes/1
 Accept: application/json
 Content-Type: application/json
 
