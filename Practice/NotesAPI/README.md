@@ -9,6 +9,30 @@ Este proyecto es el "Road-to-Senior" práctico para la arquitectura **ASP.NET Co
 
 ---
 
+## ⏸️ Plan de Acción para Pausas
+
+1.  **Stop:** Siempre detente después de completar una tarea (`$\square$`).
+2.  **Commit:** Haz un **commit** en tu repositorio de Git con el paso que terminaste.
+3.  **Update:** Actualiza la tabla **📌 Estado Actual** en este README indicando la próxima tarea.
+
+---
+
+## 📋 Plan de Acción Incremental (Roadmap)
+
+El proyecto está dividido en tres fases que cubren los principales temas de las entrevistas .NET Core.
+
+| Fase | Título | Preguntas Clave Cubiertas | Tarea Principal |
+| :--- | :--- | :--- | :--- |
+| **Fase 1.5** | **The Foundation** | Q7, Q9, Q19 (DI) | **Setup Inicial y Routing** |
+| **Fase 2** | **The Mechanics** | Q12, Q14, Q10 | **Data, Asincronía, y Servicios** (El Core de la App) |
+| **Fase 3** | **The Architecture** | Q18, Q20, Q23, Q16 | **Estabilidad, Monitoreo y Escalabilidad** (Senior) |
+| **Fase 4** | **API Surface & Flow** | Q3, Q11, Q15, Q17 | CORS, Pipeline, y Contextos |
+| **Fase 5** | **Quality Assurance** | N/A (Fundamental Senior) | Unit & Integration Testing |
+| **Fase 6** | **Security** | N/A (Fundamental Senior) | JWT Authentication |
+| **Fase 7** | **Production Readiness** | N/A (DevOps Senior) | Metrics (Prometheus) y Cloud Deployment |
+
+---
+
 ## 📌 Estado Actual y Próximo Paso (Quick Start)
 
 Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTUALÍZALA al inicio de cada sesión de trabajo.**
@@ -44,56 +68,3 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | $\square$	| **Finalizacion etapa 7**	| Production Readiness Production Readiness Observabilidad & Cloud |
 
 ---
-
-## 📋 Plan de Acción Incremental (Roadmap)
-
-El proyecto está dividido en tres fases que cubren los principales temas de las entrevistas .NET Core.
-
-| Fase | Título | Preguntas Clave Cubiertas | Tarea Principal |
-| :--- | :--- | :--- | :--- |
-| **Fase 1.5** | **The Foundation** | Q7, Q9, Q19 (DI) | **Setup Inicial y Routing** |
-| **Fase 2** | **The Mechanics** | Q12, Q14, Q10 | **Data, Asincronía, y Servicios** (El Core de la App) |
-| **Fase 3** | **The Architecture** | Q18, Q20, Q23, Q16 | **Estabilidad, Monitoreo y Escalabilidad** (Senior) |
-| **Fase 4** | **API Surface & Flow** | Q3, Q11, Q15, Q17 | CORS, Pipeline, y Contextos |
-| **Fase 5** | **Quality Assurance** | N/A (Fundamental Senior) | Unit & Integration Testing |
-| **Fase 6** | **Security** | N/A (Fundamental Senior) | JWT Authentication |
-| **Fase 7** | **Production Readiness** | N/A (DevOps Senior) | Metrics (Prometheus) y Cloud Deployment |
----
-
-## 🎯 To-Do List Detallada
-
-Empieza creando una nueva solución **ASP.NET Core Web API**.
-
-### I. Configuración y Primer Endpoint (Fase 1.5)
-
-| ✅ | Tarea (Task) | Concepto Cubierto | Estado |
-| :--- | :--- | :--- | :--- |
-| **✅** | 1. Crear un `Note` **simple model** (solo `Id` y `Title`). | Estructura básica de la aplicación. | |
-| **✅** | 2. Crear un `NotesController` **simple** y un método `Get()` que devuelva una lista **fija** (hardcoded). | **Q9: Routing** (Rutas de la API). | |
-| **✅** | 3. **(Opcional pero recomendado)**: Usa **Dependency Injection** (**DI**) para inyectar la lista fija en el `Controller` (ej: `List<Note>`). | **Q19/Q4: Lifetimes** (usa `AddSingleton` para la lista fija). | |
-
-### II. Data y Asincronía (Fase 2: The Mechanics)
-
-| ✅ | Tarea (Task) | Concepto Cubierto | Estado |
-| :--- | :--- | :--- | :--- |
-| **✅** | 4. Instalar **Entity Framework Core** (EF Core) y configurar el `DbContext` con una base de datos local (ej: **SQLite** o **InMemory**). | **Q12: EF Core** (Configuración de Base de Datos). | |
-| **✅** | 5. Registrar tu `DbContext` en `Program.cs` / `Startup.cs` usando el **Lifetime** `services.AddScoped`. | **Q19: Scoped Lifetime** (Fundamental para DB Context). | |
-| **✅** | 6. Migrar el método `Get()` del `Controller` para usar **EF Core** y obtener las notas. | **Q14: Asynchronous Programming** (Empieza a usar `ToListAsync()`). | |
-| **✅** | 7. Crea el método `POST` (Crear Nota) asegurándote de usar **Async** (`CreateAsync`, `SaveChangesAsync`). | **Q14: Async** (Mejora la **Performance**). | |
-
-### III. Arquitectura y Estabilidad (Fase 3: Advanced)
-
-| **✅** | Tarea (Task) | Concepto Cubierto | Estado |
-| :--- | :--- | :--- | :--- |
-| **✅** | 8. Implementar un **Global Exception Handler** para manejar errores como 404 (Not Found). | **Q23: Global Exception Handling** (Middleware). | |
-| **✅** | 9. Configurar **Health Checks** para el servicio. La *health check* debe verificar el estado de la base de datos. | **Q20: Health Checks** (Monitoreo). | |
-| **✅** | 10. Configurar una librería de **Logging** (ej: Serilog) para enviar los logs a la consola o a un archivo. | **Q18: Centralized Logging** (Observabilidad). | |
-| **✅** | 11. **(Microservices/Desarrollo)**: Refactorizar la lógica de negocio a un **separado Service Layer** (fuera del Controller). | **Q16: Microservices** (Prepara la arquitectura). | |
-
----
-
-### ⏸️ Plan de Acción para Pausas
-
-1.  **Stop:** Siempre detente después de completar una tarea (`$\square$`).
-2.  **Commit:** Haz un **commit** en tu repositorio de Git con el paso que terminaste.
-3.  **Update:** Actualiza la tabla **📌 Estado Actual** en este README indicando la próxima tarea.
