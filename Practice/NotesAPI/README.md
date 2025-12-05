@@ -3,7 +3,9 @@
 Este proyecto es el "Road-to-Senior" práctico para la arquitectura **ASP.NET Core**. El objetivo principal es construir una API simple de notas/tareas (`CRUD`) y, de manera incremental, refactorizarla para aplicar conceptos de nivel intermedio y avanzado.
 
 * **Project Name Idea:** `NotesAPI`
-* **Goal:** Crear una API que solo sepa **Crear, Leer, Actualizar y Borrar** notas (`POST /notes`, `GET /notes/{id}`, etc.).
+* **Goals:** 
+    - ✅ Crear una API que solo sepa **Crear, Leer, Actualizar y Borrar** notas (`POST /notes`, `GET /notes/{id}`, etc.).
+    - $\square$ Convertirlo en un Microservicio listo para producción.
 
 ---
 
@@ -11,21 +13,36 @@ Este proyecto es el "Road-to-Senior" práctico para la arquitectura **ASP.NET Co
 
 Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTUALÍZALA al inicio de cada sesión de trabajo.**
 
-| Estado | Última Tarea Completada | Tarea Actual | Concepto Clave a Repasar |
-| :--- | :--- | :--- | :--- |
-| **✅** | N/A (Inicio de Proyecto) | 1. Crear el `Note` Model | **Estructura básica** y modelos de datos. |
-| **✅** | 1. Crear el `Note` Model | 2. Crear el `NotesController` | **Q9: Routing** (Rutas de la API). |
-| **✅** | 2. Crear el `NotesController` | 3. Implementar el `Repository` y uso de DI | **Q19/Q4: Lifetimes** (usa `AddSingleton` para la lista fija). |
-| **✅** | 3. Implementar el `Repository` | **Finalizamos etapa 1.5** | **Q7, Q9, Q19 (DI)**	Setup Inicial y Routing |
-| **✅** | **Finalizamos etapa 1.5** | 4. Instalar Entity Framework Core (EF Core) y configurar el DbContext. | **Q12:** EF Core (Configuración de Base de Datos). |
-| **✅** | 4. Instalar Entity Framework Core (EF Core) y configurar el DbContext. | 5. Implementar async y await en el método Get() y crear datos iniciales. | **Q14** (Programación Asíncrona) |
-| **✅** | 5. Implementar async y await en el método Get() y crear datos iniciales. | 6. Implementar async y await en el método Post(). | **Q14** (Programación Asíncrona) |
-| **✅** | 6. Implementar async y await en el método Post(). | **Finalizamos etapa 2** | **Q12, Q14, Q10** |
-| **✅** | **Finalizamos etapa 2** | 7. Concretizacion final de la ABM de la API. | Completamos todos los metodos de la API. |
-| **✅** | 7. Concretizacion final de la ABM de la API. | 8. Implementar un Global Exception Handler en el Middleware Pipeline. | **Q23:** Global Exception Handling (Middleware). |
-| **✅** | 8. Implementar un Global Exception Handler en el Middleware Pipeline. | 9. Configurar Health Checks para el servicio, verificando el estado de la base de datos (NotesDbContext). | **Q20:** Health Checks (Monitoreo). |
-| **✅** | 9. Configurar Health Checks... | 10. Configurar una librería de Logging (ej: Serilog). | **Q18:** Centralized Logging (Observabilidad). |
-| **✅** | 10. Configurar una librería de Logging (ej: Serilog). | 11. Refactorizar la lógica a un Service Layer. | **Q16:** Service Layer (Separación de Intereses). |
+| Estado | Tarea Actual | Concepto Clave a Repasar |
+| :--- | :--- | :--- |
+| **✅** | 1. Crear el `Note` Model | **Estructura básica** y modelos de datos. |
+| **✅** | 2. Crear el `NotesController` | **Q9: Routing** (Rutas de la API). |
+| **✅** | 3. Implementar el `Repository` y uso de DI | **Q19/Q4: Lifetimes** (usa `AddSingleton` para la lista fija). |
+| **✅** | **Finalizamos etapa 1.5** | **Q7, Q9, Q19 (DI)**	Setup Inicial y Routing |
+| **✅** | 4. Instalar Entity Framework Core (EF Core) y configurar el DbContext. | **Q12:** EF Core (Configuración de Base de Datos). |
+| **✅** | 5. Implementar async y await en el método Get() y crear datos iniciales. | **Q14** (Programación Asíncrona) |
+| **✅** | 6. Implementar async y await en el método Post(). | **Q14** (Programación Asíncrona) |
+| **✅** | **Finalizamos etapa 2** | **Q12, Q14, Q10** |
+| **✅** | 7. Concretizacion final de la ABM de la API. | Completamos todos los metodos de la API. |
+| **✅** | 8. Implementar un Global Exception Handler en el Middleware Pipeline. | **Q23:** Global Exception Handling (Middleware). |
+| **✅** | 9. Configurar Health Checks para el servicio, verificando el estado de la base de datos (NotesDbContext). | **Q20:** Health Checks (Monitoreo). |
+| **✅** | 10. Configurar una librería de Logging (ej: Serilog). | **Q18:** Centralized Logging (Observabilidad). |
+| **✅** | 11. Refactorizar la lógica a un Service Layer. | **Q16:** Service Layer (Separación de Intereses). |
+| **✅** | **Finalizamos etapa 3** |
+| **IN PROGRESS** | 12. Configurar CORS (Q11) y revisión del Pipeline. | Q11, Q15, Q17: Middleware Order, CORS. |
+| $\square$	| 13. Revisión del Pipeline: Discusión sobre el orden y rol de los middlewares: IApplicationBuilder vs IServiceCollection.  | Q3, Q15, Q17: Middleware, Pipeline Order, DI Lifetimes. |
+| $\square$	| **Finalizacion etapa 4**	| API Surface & Flow |
+| $\square$	| 14. Setup de Proyectos de Test: Crea NotesAPI.Tests (tipo xUnit) y añade dependencias (Microsoft.NET.Test.Sdk, Moq). | Testing Project Setup. |
+| $\square$	| 15. Unit Testing (Controller): Escribe tests para el NotesController usando Moq para simular (mockear) la interfaz INotesService con respuestas controladas. | FIRST Principle, Mocking. |
+| $\square$	| 16. Integration Testing (Full Stack): Escribe tests que usen WebApplicationFactory para probar el flujo completo: Controller -> Service -> DB real (InMemory/SQLite). | Integration Testing, WebApplicationFactory. |
+| $\square$	| **Finalizacion etapa 5**	| Quality Assurance Testing |
+| $\square$	| 17. JWT Authentication Setup: Configura la autenticación JWT en Program.cs y añade un dummy endpoint de login que genere un token. | JWT Authentication. |
+| $\square$	| 18. Authorization: Protege el endpoint POST /notes con el atributo [Authorize] para asegurar que solo usuarios autenticados puedan crear notas. | API Authorization. |
+| $\square$	| **Finalizacion etapa 6**	| Security Authentication & Authorization |
+| $\square$	| 19. Metrics (Prometheus): Integra una librería como App.Metrics o Prometheus-net para exponer métricas básicas (/metrics) como latencia de peticiones y conteo de endpoints. | API Metrics, Q20 (Monitoreo). |
+| $\square$	| 20. Despliegue en Azure/AWS: Prepara la API para ser desplegada como un Contenedor Docker y despliégala en un servicio de Cloud (ej: Azure App Service, AWS Elastic Beanstalk o EKS). | Cloud Infrastructure, DevOps. |
+| $\square$	| **Finalizacion etapa 7**	| Production Readiness Production Readiness Observabilidad & Cloud |
+
 ---
 
 ## 📋 Plan de Acción Incremental (Roadmap)
@@ -37,7 +54,10 @@ El proyecto está dividido en tres fases que cubren los principales temas de las
 | **Fase 1.5** | **The Foundation** | Q7, Q9, Q19 (DI) | **Setup Inicial y Routing** |
 | **Fase 2** | **The Mechanics** | Q12, Q14, Q10 | **Data, Asincronía, y Servicios** (El Core de la App) |
 | **Fase 3** | **The Architecture** | Q18, Q20, Q23, Q16 | **Estabilidad, Monitoreo y Escalabilidad** (Senior) |
-
+| **Fase 4** | **API Surface & Flow** | Q3, Q11, Q15, Q17 | CORS, Pipeline, y Contextos |
+| **Fase 5** | **Quality Assurance** | N/A (Fundamental Senior) | Unit & Integration Testing |
+| **Fase 6** | **Security** | N/A (Fundamental Senior) | JWT Authentication |
+| **Fase 7** | **Production Readiness** | N/A (DevOps Senior) | Metrics (Prometheus) y Cloud Deployment |
 ---
 
 ## 🎯 To-Do List Detallada
