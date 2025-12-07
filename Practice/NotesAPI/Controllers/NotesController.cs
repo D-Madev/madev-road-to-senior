@@ -1,9 +1,6 @@
 namespace NotesAPI.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NotesAPI.Data;
-using NotesAPI.IRepository;
 using NotesAPI.Models;
 using NotesAPI.Services;
 

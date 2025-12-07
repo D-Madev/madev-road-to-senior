@@ -1,17 +1,19 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using NotesAPI.Data;
-using NotesAPI.IRepository;
-using NotesAPI.Repository;
 using NotesAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
-// Usar la implementación con datos estaticos.
+/* Usar la implementación con datos estaticos.
+ * 
+ * Abstracción (Desacoplamiento): El Controller solo sabía que dependía de una interfaz (IRepository), 
+ * no sabía si el dato venía de una lista de la memoria, un archivo XML o una base de datos.
+ * 
+ * El Patrón Repository se fusionó de manera eficiente con el Patrón de Service Layer.
+ */
 // builder.Services.AddSingleton<INotesRepository, StaticNotesRepository>();
 builder.Services.AddControllers();
 

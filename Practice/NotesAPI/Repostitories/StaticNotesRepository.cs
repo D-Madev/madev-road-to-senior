@@ -1,7 +1,7 @@
-﻿namespace NotesAPI.Repository;
+﻿namespace NotesAPI.Repositories;
 
-using NotesAPI.IRepository;
 using NotesAPI.Models;
+using NotesAPI.Repostitories;
 
 public class StaticNotesRepository : INotesRepository
 {

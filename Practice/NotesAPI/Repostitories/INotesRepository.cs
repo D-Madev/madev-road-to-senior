@@ -1,4 +1,4 @@
-﻿namespace NotesAPI.IRepository;
+﻿namespace NotesAPI.Repostitories;
 
 using NotesAPI.Models;
 
