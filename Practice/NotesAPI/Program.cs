@@ -7,6 +7,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
+var frontend = builder.Configuration.GetValue<string>("AllowedOrigins:Frontend");
+
+if (!string.IsNullOrEmpty(frontend))
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: "Origins",
+            builder =>
+            {
+                builder.WithOrigins(frontend)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+    });
+}
+
 /* Usar la implementación con datos estaticos.
  * 
  * Abstracción (Desacoplamiento): El Controller solo sabía que dependía de una interfaz (IRepository), 
@@ -93,6 +109,7 @@ try
 
     app.UseHttpsRedirection();
     app.MapControllers();
+    app.UseCors("Origins");
 
     Log.Information("✅ NotesAPI ha iniciado correctamente.");
     app.Run();
