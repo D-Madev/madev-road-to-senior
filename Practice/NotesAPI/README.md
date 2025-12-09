@@ -56,9 +56,9 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | 12. Configurar CORS (Q11) y revisión del Pipeline. | Q11, Q15, Q17: Middleware Order, CORS. |
 | **✅**	| 13. Revisión del Pipeline: Discusión sobre el orden y rol de los middlewares: IApplicationBuilder vs IServiceCollection.  | Q3, Q15, Q17: Middleware, Pipeline Order, DI Lifetimes. |
 | **✅**	| **Finalizacion etapa 4**	| API Surface & Flow |
-| **IN PROGRESS**	| 14. Setup de Proyectos de Test: Crea NotesAPI.Tests (tipo xUnit) y añade dependencias (Microsoft.NET.Test.Sdk, Moq). | Testing Project Setup. |
-| $\square$	| 15. Unit Testing (Controller): Escribe tests para el NotesController usando Moq para simular (mockear) la interfaz INotesService con respuestas controladas. | FIRST Principle, Mocking. |
-| $\square$	| 16. Integration Testing (Full Stack): Escribe tests que usen WebApplicationFactory para probar el flujo completo: Controller -> Service -> DB real (InMemory/SQLite). | Integration Testing, WebApplicationFactory. |
+| **✅**	| 14. Setup de Proyectos de Test: Crea NotesAPI.Tests (tipo xUnit) y añade dependencias (Microsoft.NET.Test.Sdk, Moq). | Testing Project Setup. |
+| **✅**	| 15. Unit Testing (Controller): Escribe tests para el NotesController usando Moq para simular (mockear) la interfaz INotesService con respuestas controladas. | FIRST Principle, Mocking. |
+| **IN PROGRESS**	| 16. Integration Testing (Full Stack): Escribe tests que usen WebApplicationFactory para probar el flujo completo: Controller -> Service -> DB real (InMemory/SQLite). | Integration Testing, WebApplicationFactory. |
 | $\square$	| **Finalizacion etapa 5**	| Quality Assurance Testing |
 | $\square$	| 17. JWT Authentication Setup: Configura la autenticación JWT en Program.cs y añade un dummy endpoint de login que genere un token. | JWT Authentication. |
 | $\square$	| 18. Authorization: Protege el endpoint POST /notes con el atributo [Authorize] para asegurar que solo usuarios autenticados puedan crear notas. | API Authorization. |
