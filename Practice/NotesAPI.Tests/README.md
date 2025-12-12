@@ -11,7 +11,7 @@ El objetivo es probar que el **Controller** (la capa HTTP) maneja correctamente 
 | **`GET /notes/{id}`** | **Happy Path:** Devuelve la nota solicitada. | `200 OK` | ✅ |
 | **`GET /notes/{id}`** | **No Encontrado:** La nota no existe. | `404 Not Found` | ✅ |
 | **`POST /notes`** | **Creación Exitosa:** Se crea la nota. | `201 Created` | ✅ |
-| **`POST /notes`** | **Fallo de Service:** El Service devuelve `null` (Ej. `newNote` es `null`). | `404 Not Found` | ⚠️ PENDIENTE |
+| **`POST /notes`** | **Fallo de Service:** El Service devuelve `null` (Ej. `newNote` es `null`). | `404 Not Found` | ✅ |
 | **`PUT /notes/{id}`** | **Actualización Exitosa:** Se actualiza la nota. | `204 No Content` | ✅ |
 | **`PUT /notes/{id}`** | **Error de Cliente:** Ids de ruta y cuerpo no coinciden. | `400 Bad Request` | ✅ |
 | **`PUT /notes/{id}`** | **No Encontrado:** La nota a actualizar no existe. | `404 Not Found` | ✅ |
