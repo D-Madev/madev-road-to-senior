@@ -1,4 +1,4 @@
-﻿namespace NotesAPI.Tests;
+﻿namespace NotesAPI.Tests.Controllers;
 
 using Xunit;
 using Moq;
@@ -165,6 +165,28 @@ public class NotesControllerTests
 
         // Verificar que el Service fue llamado.
         _mockService.Verify(s => s.CreateAsync(newNote), Times.Once);
+    }
+
+    // POST /notes
+    [Fact]
+    public async Task CreateNote_ReturnsNotFound_WhenServiceReturnsNull()
+    {
+        // ARRANGE
+        // El Service espera un objeto, pero devolverá null
+        var nullNote = new Note { Title = "Title" };
+
+        // Configurar el Mock: Le decimos al Service que falló (devuelve null).
+        _mockService.Setup(s => s.CreateAsync(It.IsAny<Note>())).ReturnsAsync((Note?)null);
+
+        // ACT
+        var result = await _controller.CreateAsync(nullNote);
+
+        // ASSERT
+        // 1. Verificar que el resultado es 404 Not Found.
+        Assert.IsType<NotFoundObjectResult>(result);
+
+        // 2. Verificar que el Service fue llamado.
+        _mockService.Verify(s => s.CreateAsync(It.IsAny<Note>()), Times.Once);
     }
 
     // PUT /notes/{id}
