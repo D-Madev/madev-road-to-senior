@@ -10,9 +10,10 @@ El objetivo es probar que el **Controller** (la capa HTTP) maneja correctamente 
 | **`GET /notes`** | **Lista Vacía:** Devuelve una lista vacía (no un 404). | `200 OK` | ✅ |
 | **`GET /notes/{id}`** | **Happy Path:** Devuelve la nota solicitada. | `200 OK` | ✅ |
 | **`GET /notes/{id}`** | **No Encontrado:** La nota no existe. | `404 Not Found` | ✅ |
-| **`POST /notes`** | **Creación Exitosa:** Se crea la nota. | `201 Created` | |
-| **`PUT /notes/{id}`** | **Actualización Exitosa:** Se actualiza la nota. | `204 No Content` | |
-| **`PUT /notes/{id}`** | **No Encontrado:** La nota a actualizar no existe. | `404 Not Found` | |
+| **`POST /notes`** | **Creación Exitosa:** Se crea la nota. | `201 Created` | ✅ |
+| **`PUT /notes/{id}`** | **Actualización Exitosa:** Se actualiza la nota. | `204 No Content` | ✅ |
+| **`PUT /notes/{id}`** | **Error de servidor:** Ids no coinciden. | `400 Bad Request` | ✅ |
+| **`PUT /notes/{id}`** | **No Encontrado:** La nota a actualizar no existe. | `404 Not Found` | ✅ |
 | **`DELETE /notes/{id}`** | **Eliminación Exitosa:** Se elimina la nota. | `204 No Content` | |
 | **`DELETE /notes/{id}`** | **No Encontrado:** La nota a eliminar no existe. | `404 Not Found` | |
 
