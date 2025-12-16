@@ -54,17 +54,22 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | 11. Refactorizar la lógica a un Service Layer. | **Q16:** Service Layer (Separación de Intereses). |
 | **✅** | **Finalizamos etapa 3** |
 | **✅** | 12. Configurar CORS (Q11) y revisión del Pipeline. | Q11, Q15, Q17: Middleware Order, CORS. |
-| **✅**	| 13. Revisión del Pipeline: Discusión sobre el orden y rol de los middlewares: IApplicationBuilder vs IServiceCollection.  | Q3, Q15, Q17: Middleware, Pipeline Order, DI Lifetimes. |
-| **✅**	| **Finalizacion etapa 4**	| API Surface & Flow |
-| **✅**	| 14. Setup de Proyectos de Test: Crea NotesAPI.Tests (tipo xUnit) y añade dependencias (Microsoft.NET.Test.Sdk, Moq). | Testing Project Setup. |
-| **✅**	| 15. Unit Testing (Controller): Escribe tests para el NotesController usando Moq para simular (mockear) la interfaz INotesService con respuestas controladas. | FIRST Principle, Mocking. |
-| **IN PROGRESS**	| 16. Integration Testing (Full Stack): Escribe tests que usen WebApplicationFactory para probar el flujo completo: Controller -> Service -> DB real (InMemory/SQLite). | Integration Testing, WebApplicationFactory. |
-| $\square$	| **Finalizacion etapa 5**	| Quality Assurance Testing |
-| $\square$	| 17. JWT Authentication Setup: Configura la autenticación JWT en Program.cs y añade un dummy endpoint de login que genere un token. | JWT Authentication. |
-| $\square$	| 18. Authorization: Protege el endpoint POST /notes con el atributo [Authorize] para asegurar que solo usuarios autenticados puedan crear notas. | API Authorization. |
+| **✅** | 13. Revisión del Pipeline: Discusión sobre el orden y rol de los middlewares: IApplicationBuilder vs IServiceCollection.  | Q3, Q15, Q17: Middleware, Pipeline Order, DI Lifetimes. |
+| **✅** | **Finalizacion etapa 4**	| API Surface & Flow |
+| **✅** | 14. Setup de Proyectos de Test: Crea NotesAPI.Tests (tipo xUnit) y añade dependencias (Microsoft.NET.Test.Sdk, Moq). | Testing Project Setup. |
+| **✅** | 15. Unit Testing (Controller): Escribe tests para el NotesController usando Moq para simular (mockear) la interfaz INotesService con respuestas controladas. | FIRST Principle, Mocking. |
+| **✅** | 16. Integration Testing (Service Layer): Escribe tests que usen WebApplicationFactory para probar el flujo completo: Controller -> Service -> DB real (InMemory/SQLite). | Integration Testing, WebApplicationFactory. |
+| **✅** | 17. Integration Testing (E2E API): Tests con WebApplicationFactory para el flujo HTTP completo.	| WebApplicationFactory, E2E Testing. |
+| **✅** | **Finalizacion etapa 5**	| Quality Assurance Testing |
+| **IN PROGRESS**	| 18. JWT Authentication Setup: Configura la autenticación JWT en Program.cs y añade un dummy endpoint de login que genere un token. | JWT Authentication. |
+| $\square$	| 19. Authorization: Protege el endpoint POST /notes con el atributo [Authorize] para asegurar que solo usuarios autenticados puedan crear notas. | API Authorization. |
 | $\square$	| **Finalizacion etapa 6**	| Security Authentication & Authorization |
-| $\square$	| 19. Metrics (Prometheus): Integra una librería como App.Metrics o Prometheus-net para exponer métricas básicas (/metrics) como latencia de peticiones y conteo de endpoints. | API Metrics, Q20 (Monitoreo). |
-| $\square$	| 20. Despliegue en Azure/AWS: Prepara la API para ser desplegada como un Contenedor Docker y despliégala en un servicio de Cloud (ej: Azure App Service, AWS Elastic Beanstalk o EKS). | Cloud Infrastructure, DevOps. |
+| $\square$	| 20. Documentación (Swagger/OpenAPI): Instala Swashbuckle y configura la generación automática de documentación. | API Documentation, Q24. |
+| $\square$	| 21. Metrics (Prometheus): Integra una librería para exponer métricas básicas (/metrics). | API Metrics, Q20 (Monitoreo). |
+| $\square$ | 22. Performance/Load Testing: Diseña y ejecuta un test de carga (ej. con k6 o JMeter).	| Testing No Funcional, Optimización. |
+| $\square$ | 23. Security Testing (DAST): Ejecuta un escaneo básico de vulnerabilidades (ej. con OWASP ZAP) en la API. | Vulnerability Scanning, OWASP Top 10. |
+| $\square$ | 24. Chaos Testing: Simula fallos de la base de datos o latencia para probar la resiliencia del Global Exception Handler. | Resiliencia, Pruebas de Caos. |
+| $\square$ | 25. Despliegue en Azure/AWS: Prepara la API como un Contenedor Docker y despliégala en un servicio de Cloud. | Cloud Infrastructure, DevOps. |
 | $\square$	| **Finalizacion etapa 7**	| Production Readiness Production Readiness Observabilidad & Cloud |
 
 ---
