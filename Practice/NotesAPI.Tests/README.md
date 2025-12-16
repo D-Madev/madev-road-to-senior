@@ -39,3 +39,19 @@ El objetivo es probar la **lógica de negocio** y la **interacción con la DB** 
 | **`DeleteAsync`** | **Happy Path:** ID válido y existente. | Retorna `true` y verifica que la nota fue eliminada de la DB. | ✅ |
 | **`DeleteAsync`** | **Validación (Edge Case):** ID $\le 0$. | Retorna `false`. (Controla la validación: `if (id <= 0)`) | ✅ |
 | **`DeleteAsync`** | **No Encontrado:** ID válido pero inexistente. | Retorna `false`. | ✅ |
+
+---
+
+### III. Integration Tests para la API (E2E)
+
+El objetivo es probar el **flujo completo** (**HTTP Request** to **Controller** to **Service** to **DB**) usando `WebApplicationFactory`.
+
+| Método HTTP | Escenario | Verificación | Estado |
+| :--- | :--- | :--- | :--- |
+| **`GET /notes`** | **Happy Path:** Listar notas. | Retorna `200 OK` y JSON con lista de notas. | ✅ |
+| **`GET /notes/{id}`** | **Happy Path:** Obtener nota específica. | Retorna `200 OK` y la nota creada previamente. | ✅ |
+| **`GET /notes/{id}`** | **No Encontrado:** ID inexistente. | Retorna `404 Not Found`. | ✅ |
+| **`POST /notes`** | **Happy Path:** Creación exitosa. | Retorna `201 Created` y Header `Location`. | ✅ |
+| **`PUT /notes/{id}`** | **Happy Path:** Actualización exitosa. | Retorna `204 No Content` y verifica persistencia con GET. | ✅ |
+| **`PUT /notes/{id}`** | **Error de Cliente:** ID URL vs Body no coinciden. | Retorna `400 Bad Request`. | ✅ |
+| **`DELETE /notes/{id}`** | **Happy Path:** Eliminación exitosa. | Retorna `204 No Content` y verifica 404 con GET subsiguiente. | ✅ |
