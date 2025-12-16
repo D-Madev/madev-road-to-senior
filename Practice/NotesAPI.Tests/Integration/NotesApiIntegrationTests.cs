@@ -25,7 +25,7 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
         _client = factory.CreateClient();
         _jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         _jwtToken = GetJwtToken().GetAwaiter().GetResult();
-        // 
+        // Configurar el cliente para usar el token por defecto en TODAS las solicitudes
         _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _jwtToken);
     }
 
