@@ -16,12 +16,46 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
     private readonly HttpClient _client;
     // Opciones para deserializar JSON (ignorando mayúsculas/minúsculas)
     private readonly JsonSerializerOptions _jsonOptions;
+    // Campo para guardar el token jwt
+    private readonly string _jwtToken;
 
     public NotesApiIntegrationTests(CustomWebApplicationFactory<Program> factory)
     {
         // Crea un cliente HTTP para interactuar con la aplicación en memoria.
         _client = factory.CreateClient();
         _jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        _jwtToken = GetJwtToken().GetAwaiter().GetResult();
+        // 
+        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _jwtToken);
+    }
+
+    // Clase interna para deserializar la respuesta del login
+    private class TokenResponse { public string Token { get; set; } = string.Empty; }
+
+    // Método Asíncrono para obtener el token
+    private async Task<string> GetJwtToken()
+    {
+        var loginRequest = new
+        {
+            username = "testuser",
+            password = "password"
+        };
+
+        var jsonContent = new StringContent(
+            JsonSerializer.Serialize(loginRequest),
+            Encoding.UTF8,
+            "application/json"
+        );
+
+        var response = await _client.PostAsync("/auth/login", jsonContent);
+
+        // Aseguramos que el login fue exitoso (200 OK)
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var tokenData = JsonSerializer.Deserialize<TokenResponse>(content, _jsonOptions);
+
+        return tokenData!.Token;
     }
 
     // Healper para crear notas

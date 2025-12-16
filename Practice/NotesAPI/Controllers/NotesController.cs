@@ -1,9 +1,11 @@
 namespace NotesAPI.Controllers;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NotesAPI.Models;
 using NotesAPI.Services;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class NotesController : ControllerBase
@@ -19,6 +21,7 @@ public class NotesController : ControllerBase
      * Por eso, en .NET Core es una regla de oro usar programación 
      * asíncrona para no bloquear el thread del servidor.
      */
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {

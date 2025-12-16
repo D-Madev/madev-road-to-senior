@@ -1,11 +1,43 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
-using NotesAPI.Data;
 using NotesAPI.Services;
+using NotesAPI.Data;
+using System.Text;
+using Serilog;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+
+// Obtener el IConfiguration (ya disponible a través del builder)
+var configuration = builder.Configuration;
+
+// CONFIGURACIÓN JWT
+//  Leemos la clave desde la sección "Jwt:Key" de appsettings, Secret Manager o Variables de Entorno.
+var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]!);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        // Usamos la clave leída
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        // Para este demo, no validamos el emisor
+        ValidateIssuer = false,
+        // Para este demo, no validamos la audiencia
+        ValidateAudience = false
+    };
+});
 
 var frontend = builder.Configuration.GetValue<string>("AllowedOrigins:Frontend");
 
@@ -108,8 +140,13 @@ try
     if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
     app.UseHttpsRedirection();
-    app.MapControllers();
     app.UseCors("Origins");
+
+    // Deben ir después de UseRouting y UseCors (si lo usas), y antes de MapControllers.
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.MapControllers();
 
     Log.Information("✅ NotesAPI ha iniciado correctamente.");
     app.Run();

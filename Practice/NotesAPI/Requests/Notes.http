@@ -1,12 +1,15 @@
 @hostAddrs = http://localhost:5257
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFETUlOIiwiZXhwIjoxNzY1ODk4NDUxLCJpc3MiOiJOb3Rlc0FQSSIsImF1ZCI6Ik5vdGVzQ2xpZW50In0.8CNXujvbTfayPyV0oYTU1_BV9tPEic68Ko5gEVG6w7g
 
 GET {{hostAddrs}}/Notes/
 Accept: application/json
 
 ###
 
+# First go to /auth/login to get a token, then use it here
 POST {{hostAddrs}}/Notes/
 Accept: application/json
+Authorization: Bearer {{token}} 
 Content-Type: application/json
 
 {
@@ -17,12 +20,14 @@ Content-Type: application/json
 ###
 
 GET {{hostAddrs}}/Notes/1
+Authorization: Bearer {{token}} 
 Accept: application/json
 
 ###
 
 PUT {{hostAddrs}}/Notes/1
 Accept: application/json
+Authorization: Bearer {{token}} 
 Content-Type: application/json
 
 {
@@ -34,6 +39,7 @@ Content-Type: application/json
 ###
 
 DELETE {{hostAddrs}}/Notes/2
+Authorization: Bearer {{token}} 
 Accept: application/json
 
 ###

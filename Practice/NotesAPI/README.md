@@ -61,15 +61,16 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | 16. Integration Testing (Service Layer): Escribe tests que usen WebApplicationFactory para probar el flujo completo: Controller -> Service -> DB real (InMemory/SQLite). | Integration Testing, WebApplicationFactory. |
 | **✅** | 17. Integration Testing (E2E API): Tests con WebApplicationFactory para el flujo HTTP completo.	| WebApplicationFactory, E2E Testing. |
 | **✅** | **Finalizacion etapa 5**	| Quality Assurance Testing |
-| **IN PROGRESS**	| 18. JWT Authentication Setup: Configura la autenticación JWT en Program.cs y añade un dummy endpoint de login que genere un token. | JWT Authentication. |
-| $\square$	| 19. Authorization: Protege el endpoint POST /notes con el atributo [Authorize] para asegurar que solo usuarios autenticados puedan crear notas. | API Authorization. |
-| $\square$	| **Finalizacion etapa 6**	| Security Authentication & Authorization |
-| $\square$	| 20. Documentación (Swagger/OpenAPI): Instala Swashbuckle y configura la generación automática de documentación. | API Documentation, Q24. |
-| $\square$	| 21. Metrics (Prometheus): Integra una librería para exponer métricas básicas (/metrics). | API Metrics, Q20 (Monitoreo). |
-| $\square$ | 22. Performance/Load Testing: Diseña y ejecuta un test de carga (ej. con k6 o JMeter).	| Testing No Funcional, Optimización. |
-| $\square$ | 23. Security Testing (DAST): Ejecuta un escaneo básico de vulnerabilidades (ej. con OWASP ZAP) en la API. | Vulnerability Scanning, OWASP Top 10. |
-| $\square$ | 24. Chaos Testing: Simula fallos de la base de datos o latencia para probar la resiliencia del Global Exception Handler. | Resiliencia, Pruebas de Caos. |
-| $\square$ | 25. Despliegue en Azure/AWS: Prepara la API como un Contenedor Docker y despliégala en un servicio de Cloud. | Cloud Infrastructure, DevOps. |
+| **✅** | 18. Configurar Secret Manager (Desarrollo Seguro) | Seguridad de claves. |
+| **✅** | 19. JWT Authentication Setup: Configura la autenticación JWT en Program.cs y añade un dummy endpoint de login que genere un token. | JWT Authentication. |
+| **✅** | 20. Authorization: Protege el endpoint POST /notes con el atributo [Authorize] para asegurar que solo usuarios autenticados puedan crear notas. | API Authorization. |
+| **✅**	| **Finalizacion etapa 6**	| Security Authentication & Authorization |
+| **IN PROGRESS**	| 21. Documentación (Swagger/OpenAPI): Instala Swashbuckle y configura la generación automática de documentación. | API Documentation, Q24. |
+| $\square$	| 22. Metrics (Prometheus): Integra una librería para exponer métricas básicas (/metrics). | API Metrics, Q20 (Monitoreo). |
+| $\square$ | 23. Performance/Load Testing: Diseña y ejecuta un test de carga (ej. con k6 o JMeter).	| Testing No Funcional, Optimización. |
+| $\square$ | 24. Security Testing (DAST): Ejecuta un escaneo básico de vulnerabilidades (ej. con OWASP ZAP) en la API. | Vulnerability Scanning, OWASP Top 10. |
+| $\square$ | 25. Chaos Testing: Simula fallos de la base de datos o latencia para probar la resiliencia del Global Exception Handler. | Resiliencia, Pruebas de Caos. |
+| $\square$ | 26. Despliegue en Azure/AWS: Prepara la API como un Contenedor Docker y despliégala en un servicio de Cloud. | Cloud Infrastructure, DevOps. |
 | $\square$	| **Finalizacion etapa 7**	| Production Readiness Production Readiness Observabilidad & Cloud |
 
 ---
