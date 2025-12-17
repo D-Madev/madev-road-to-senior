@@ -1,11 +1,11 @@
 # 🚀 The Mini-Project: Note/To-Do API
 
-Este proyecto es el "Road-to-Senior" práctico para la arquitectura **ASP.NET Core**. El objetivo principal es construir una API simple de notas/tareas (`CRUD`) y, de manera incremental, refactorizarla para aplicar conceptos de nivel intermedio y avanzado.
+Este proyecto es el "Road-to-Senior" práctico para la arquitectura **ASP.NET Core**. El objetivo principal es construir una API de notas/tareas (`CRUD`) y refactorizarla incrementalmente para aplicar conceptos avanzados de arquitectura y DevOps.
 
 * **Project Name Idea:** `NotesAPI`
 * **Goals:** 
     - ✅ Crear una API que solo sepa **Crear, Leer, Actualizar y Borrar** notas (`POST /notes`, `GET /notes/{id}`, etc.).
-    - $\square$ Convertirlo en un Microservicio listo para producción.
+    - $\square$ Convertirlo en un Microservicio listo para producción, escalable con Docker, K8s e Identity..
 
 ---
 
@@ -28,8 +28,10 @@ El proyecto está dividido en tres fases que cubren los principales temas de las
 | **Fase 3** | **The Architecture** | Q18, Q20, Q23, Q16 | **Estabilidad, Monitoreo y Escalabilidad** (Senior) |
 | **Fase 4** | **API Surface & Flow** | Q3, Q11, Q15, Q17 | CORS, Pipeline, y Contextos |
 | **Fase 5** | **Quality Assurance** | N/A (Fundamental Senior) | Unit & Integration Testing |
-| **Fase 6** | **Security** | N/A (Fundamental Senior) | JWT Authentication |
-| **Fase 7** | **Production Readiness** | N/A (DevOps Senior) | Metrics (Prometheus) y Cloud Deployment |
+| **Fase 6** | **Security** | N/A (Fundamental Senior) | JWT Auth & Secret Management. |
+| **Fase 7** | **Production Readiness** | Observabilidad (Swagger, Metrics, Load Testing). |
+| **Fase 8** | **Cloud & Orchestration** | Docker, K8s, CI/CD. |
+| **Fase 9** | **Security II** | ASP.NET Core Identity & Advanced Auth. |
 
 ---
 
@@ -64,13 +66,26 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | 18. Configurar Secret Manager (Desarrollo Seguro) | Seguridad de claves. |
 | **✅** | 19. JWT Authentication Setup: Configura la autenticación JWT en Program.cs y añade un dummy endpoint de login que genere un token. | JWT Authentication. |
 | **✅** | 20. Authorization: Protege el endpoint POST /notes con el atributo [Authorize] para asegurar que solo usuarios autenticados puedan crear notas. | API Authorization. |
-| **✅**	| **Finalizacion etapa 6**	| Security Authentication & Authorization |
-| **✅**	| 21. Documentación (Swagger/OpenAPI): Instala Swashbuckle y configura la generación automática de documentación. | API Documentation, Q24. |
-| **IN PROGRESS**	| 22. Metrics (Prometheus): Integra una librería para exponer métricas básicas (/metrics). | API Metrics, Q20 (Monitoreo). |
-| $\square$ | 23. Performance/Load Testing: Diseña y ejecuta un test de carga (ej. con k6 o JMeter).	| Testing No Funcional, Optimización. |
-| $\square$ | 24. Security Testing (DAST): Ejecuta un escaneo básico de vulnerabilidades (ej. con OWASP ZAP) en la API. | Vulnerability Scanning, OWASP Top 10. |
-| $\square$ | 25. Chaos Testing: Simula fallos de la base de datos o latencia para probar la resiliencia del Global Exception Handler. | Resiliencia, Pruebas de Caos. |
-| $\square$ | 26. Despliegue en Azure/AWS: Prepara la API como un Contenedor Docker y despliégala en un servicio de Cloud. | Cloud Infrastructure, DevOps. |
-| $\square$	| **Finalizacion etapa 7**	| Production Readiness Production Readiness Observabilidad & Cloud |
+| **✅** | **Finalizacion etapa 6**	| Security Authentication & Authorization |
+| **✅** | 21. Documentación (Swagger/OpenAPI): Instala Swashbuckle y configura la generación automática de documentación. | API Documentation, Q24. |
+| **✅** | 22. Metrics (Prometheus) | Observabilidad: Endpoint `/metrics`. |
+| **IN PROGRESS** | 23. Performance/Load Testing (k6) | **Resiliencia:** Ver cuánto aguanta la API. |
+| $\square$ | 24. Chaos Testing | Simular fallos de DB para probar el Exception Handler. |
+| $\square$ | **Finalización Etapa 7** | **Production Readiness** |
+| $\square$ | 25. **Dockerization**: Crear `Dockerfile` y `.dockerignore`. | Contenedores e Inmutabilidad. |
+| $\square$ | 26. **Orquestación Local (Docker Compose)**: Levantar API + Prometheus + Grafana. | Networking entre contenedores. |
+| $\square$ | 27. **Kubernetes (K8s) Basics**: Crear Manifests (Deployment, Service, ConfigMaps). | Escalabilidad y Auto-curación. |
+| $\square$ | 28. **K8s Advanced**: Implementar Liveness y Readiness Probes usando los Health Checks. | Ciclo de vida del Pod. |
+| $\square$ | 29. **CI/CD Pipeline**: Configurar GitHub Actions para Build y Push de imagen. | Automatización de despliegue. |
+| **$\square$** | **Finalización Etapa 8** | **Cloud Native & Orchestration** |
+| $\square$ | 29. **ASP.NET Core Identity** | Reemplazo de Auth manual por Identity. |
+| $\square$ | 30. **RBAC (Role-Based Access Control)** | Implementación de Roles (Admin/User). |
+| $\square$ | 31. **Refresh Tokens** | Estrategias avanzadas de persistencia de sesión. |
+| **$\square$** | **Finalización Etapa 9** | **Enterprise Grade Security** |
 
 ---
+
+## 📊 Notas Técnicas de Observabilidad
+* **Endpoint de Métricas:** `/metrics` (Prometheus format).
+* **Logging:** Serilog configurado con Sinks para Consola y Archivos rotativos.
+* **Health:** Endpoint `/health` monitoreando conectividad de DbContext.

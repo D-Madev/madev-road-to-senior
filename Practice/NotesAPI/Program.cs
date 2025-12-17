@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using NotesAPI.Services;
 using NotesAPI.Data;
-using System.Text;
+using NotesAPI.Services;
+using Prometheus;
 using Serilog;
+using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -148,6 +149,9 @@ try
         NotesDbContext.Initialize(services);
     }
 
+    // Exponer el endpoint /metrics para Prometheus
+    app.MapMetrics();
+
     // TAREA 9: Configurar el endpoint de Health Checks (Q20)
     app.MapHealthChecks("/health");
 
@@ -189,6 +193,9 @@ try
 
     app.UseHttpsRedirection();
     app.UseCors("Origins");
+
+    // Recolectar métricas de las peticiones HTTP automáticamente
+    app.UseHttpMetrics();
 
     // Deben ir después de UseRouting y UseCors (si lo usas), y antes de MapControllers.
     app.UseAuthentication();
