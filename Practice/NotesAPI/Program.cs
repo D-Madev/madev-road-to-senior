@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using NotesAPI.Services;
 using NotesAPI.Data;
 using System.Text;
@@ -8,8 +9,6 @@ using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddOpenApi();
 
 // Obtener el IConfiguration (ya disponible a través del builder)
 var configuration = builder.Configuration;
@@ -64,6 +63,51 @@ if (!string.IsNullOrEmpty(frontend))
  */
 // builder.Services.AddSingleton<INotesRepository, StaticNotesRepository>();
 builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Definir el esquema de seguridad (JWT Bearer)
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header usando el esquema Bearer. Ejemplo: 'Bearer {token}'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer" // El valor debe ser "bearer" (minúsculas)
+    });
+
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Notes API - Madev Road to Senior",
+        Description = "API para la gestión de notas personales con seguridad JWT",
+        Contact = new OpenApiContact
+        {
+            Name = "Madev",
+            Email = "3matias.sm@gmail.com"
+        }
+    });
+
+    // 2. Definir qué operaciones requieren este esquema
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+
+    var xmlFilename = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 /*
  * Explicación del Lifetime (Q19): El método AddDbContext automáticamente registra 
@@ -137,7 +181,11 @@ try
         });
     });
 
-    if (app.Environment.IsDevelopment()) app.MapOpenApi();
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(); 
+    }
 
     app.UseHttpsRedirection();
     app.UseCors("Origins");

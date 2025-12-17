@@ -5,9 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using NotesAPI.Models;
 using NotesAPI.Services;
 
+/// <summary>
+/// Gestiona las notas personales de los usuarios autenticados.
+/// </summary>
 [Authorize]
 [ApiController]
 [Route("[controller]")]
+[Produces("application/json")]
 public class NotesController : ControllerBase
 {
     // private readonly INotesRepository _repository;
@@ -21,8 +25,14 @@ public class NotesController : ControllerBase
      * Por eso, en .NET Core es una regla de oro usar programación 
      * asíncrona para no bloquear el thread del servidor.
      */
+    /// <summary>
+    /// Obtiene la lista completa de notas. (Acceso público para demostración)
+    /// </summary>
+    /// <returns>Una lista de objetos de tipo Note.</returns>
+    /// <response code="200">Devuelve la lista de notas.</response>
     [AllowAnonymous]
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllAsync()
     {
         // Testing the global exception handling (Q23)
@@ -31,7 +41,15 @@ public class NotesController : ControllerBase
         return Ok(await _service.GetAllAsync());
     }
 
+    /// <summary>
+    /// Obtiene una nota específica mediante su ID.
+    /// </summary>
+    /// <param name="id">Identificador único de la nota.</param>
+    /// <response code="200">Retorna la nota solicitada.</response>
+    /// <response code="404">Si la nota con el ID especificado no existe.</response>
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
         var note = await _service.GetByIdAsync(id);
@@ -41,7 +59,17 @@ public class NotesController : ControllerBase
         return Ok(note);
     }
 
+    /// <summary>
+    /// Crea una nueva nota en el sistema.
+    /// </summary>
+    /// <param name="newNote">Objeto nota a crear.</param>
+    /// <response code="201">Nota creada exitosamente.</response>
+    /// <response code="400">Si el modelo de la nota es inválido.</response>
+    /// <response code="401">No autorizado, falta token JWT.</response>
     [HttpPost]
+    [ProducesResponseType(typeof(Note), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreateAsync([FromBody] Note newNote)
     {
         /* 
@@ -59,7 +87,18 @@ public class NotesController : ControllerBase
         return Created($"/{ControllerContext.RouteData.Values["controller"]}/{newNote.Id}", newNote);
     }
 
+    /// <summary>
+    /// Actualiza una nota existente.
+    /// </summary>
+    /// <param name="id">ID de la nota a actualizar.</param>
+    /// <param name="noteUpdate">Datos actualizados de la nota.</param>
+    /// <response code="204">Actualización exitosa (sin contenido).</response>
+    /// <response code="400">Si los IDs no coinciden o los datos son inválidos.</response>
+    /// <response code="404">Si la nota no existe.</response>
     [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateAsync(int id, [FromBody] Note noteUpdate)
     {
         if (id != noteUpdate.Id) return BadRequest("IDs no coinciden");
@@ -71,7 +110,15 @@ public class NotesController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Elimina una nota del sistema.
+    /// </summary>
+    /// <param name="id">ID de la nota a eliminar.</param>
+    /// <response code="204">Eliminación exitosa.</response>
+    /// <response code="404">Si la nota no existe.</response>
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         var deleted = await _service.DeleteAsync(id);
