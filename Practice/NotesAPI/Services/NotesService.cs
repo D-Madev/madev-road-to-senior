@@ -18,6 +18,11 @@ public class NotesService : INotesService
      */
     public async Task<List<Note>> GetAllAsync()
     {
+        // --- CÓDIGO DE CAOS ---
+        //Random rng = new Random();
+        //if (rng.Next(1, 6) == 1) // 20% de probabilidad de fallo
+        //    throw new Exception("🔥 CAOS: Error crítico inesperado en el sistema de persistencia.");
+
         return await _context.Notes.ToListAsync();
     }
 

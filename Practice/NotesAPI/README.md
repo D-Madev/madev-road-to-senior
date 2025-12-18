@@ -69,10 +69,10 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | **Finalizacion etapa 6**	| Security Authentication & Authorization |
 | **✅** | 21. Documentación (Swagger/OpenAPI): Instala Swashbuckle y configura la generación automática de documentación. | API Documentation, Q24. |
 | **✅** | 22. Metrics (Prometheus) | Observabilidad: Endpoint `/metrics`. |
-| **IN PROGRESS** | 23. Performance/Load Testing (k6) | **Resiliencia:** Ver cuánto aguanta la API. |
-| $\square$ | 24. Chaos Testing | Simular fallos de DB para probar el Exception Handler. |
-| $\square$ | **Finalización Etapa 7** | **Production Readiness** |
-| $\square$ | 25. **Dockerization**: Crear `Dockerfile` y `.dockerignore`. | Contenedores e Inmutabilidad. |
+| **✅** | 23. Performance/Load Testing (k6) | **Resiliencia:** Ver cuánto aguanta la API. |
+| **✅** | 24. Chaos Testing | Simular fallos de DB para probar el Exception Handler. |
+| **✅** | **Finalización Etapa 7** | **Production Readiness** |
+| **IN PROGRESS** | 25. **Dockerization**: Crear `Dockerfile` y `.dockerignore`. | Contenedores e Inmutabilidad. |
 | $\square$ | 26. **Orquestación Local (Docker Compose)**: Levantar API + Prometheus + Grafana. | Networking entre contenedores. |
 | $\square$ | 27. **Kubernetes (K8s) Basics**: Crear Manifests (Deployment, Service, ConfigMaps). | Escalabilidad y Auto-curación. |
 | $\square$ | 28. **K8s Advanced**: Implementar Liveness y Readiness Probes usando los Health Checks. | Ciclo de vida del Pod. |

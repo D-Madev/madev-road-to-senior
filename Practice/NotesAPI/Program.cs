@@ -175,11 +175,14 @@ try
                 var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
                 logger.LogError(exceptionHandlerPathFeature.Error, "Error global no controlado en el servidor.");
 
+                var traceId = System.Diagnostics.Activity.Current?.Id ?? context.TraceIdentifier;
+
                 // 4. Devuelve un mensaje genérico al cliente
                 await context.Response.WriteAsJsonAsync(new
                 {
                     // En producción solo se devuelve un mensaje genérico.
-                    Message = "Ocurrió un error inesperado en el servidor."
+                    Message = "Ocurrió un error inesperado en el servidor.",
+                    TraceId = traceId
                 });
             }
         });
