@@ -34,3 +34,18 @@ dotnet user-secrets set "Jwt:Key" "wqFGZWxpeiBOYXZpZGFkIHBhcmEgZXN0YSBBUEkgc2Vnd
 **Secret Manager (`secrets.json`):** Para manejar los secretos de forma segura en **Desarrollo**.
 
 -----
+
+## 🐳 Comandos de Docker Útiles
+
+| Acción | Comando |
+| :--- | :--- |
+| **Levantar y Construir** | `docker-compose up -d --build` |
+| **Detener Servicios** | `docker-compose down` |
+| **Levantar Servicios** | `docker-compose up -d` |
+| **Crear Imagen** | `docker build -t nombre-de-la-imagen:tag .` |
+| **Ejecutar Contenedor** | `docker run -d -p 8080:80 --name nombre-contenedor -e Jwt__Key="ClaveTokenSecreta" -e ASPNETCORE_ENVIRONMENT=Development nombre-de-la-imagen:tag` |
+| **Borrar Contenedor** | `docker rm -f nombre-contenedor` |
+| **Borrar Imagen** | `docker rmi nombre-de-la-imagen:tag` |
+| **Listar Contenedores** | `docker ps` |
+| **Listar Imágenes** | `docker images` |
+| **Ver Logs** | `docker logs nombre-contenedor` |
