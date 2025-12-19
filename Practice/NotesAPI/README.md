@@ -72,8 +72,8 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | 23. Performance/Load Testing (k6) | **Resiliencia:** Ver cuánto aguanta la API. |
 | **✅** | 24. Chaos Testing | Simular fallos de DB para probar el Exception Handler. |
 | **✅** | **Finalización Etapa 7** | **Production Readiness** |
-| **IN PROGRESS** | 25. **Dockerization**: Crear `Dockerfile` y `.dockerignore`. | Contenedores e Inmutabilidad. |
-| $\square$ | 26. **Orquestación Local (Docker Compose)**: Levantar API + Prometheus + Grafana. | Networking entre contenedores. |
+| **✅** | 25. **Dockerization**: Crear `Dockerfile` y `.dockerignore`. | Contenedores e Inmutabilidad. |
+| **IN PROGRESS** | 26. **Orquestación Local (Docker Compose)**: Levantar API + Prometheus + Grafana. | Networking entre contenedores. |
 | $\square$ | 27. **Kubernetes (K8s) Basics**: Crear Manifests (Deployment, Service, ConfigMaps). | Escalabilidad y Auto-curación. |
 | $\square$ | 28. **K8s Advanced**: Implementar Liveness y Readiness Probes usando los Health Checks. | Ciclo de vida del Pod. |
 | $\square$ | 29. **CI/CD Pipeline**: Configurar GitHub Actions para Build y Push de imagen. | Automatización de despliegue. |
