@@ -74,13 +74,14 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | **Finalización Etapa 7** | **Production Readiness** |
 | **✅** | 25. **Dockerization**: Crear `Dockerfile` y `.dockerignore`. | Contenedores e Inmutabilidad. |
 | **✅** | 26. **Orquestación Local (Docker Compose)**: Levantar API + Prometheus + Grafana. | Networking entre contenedores. |
-| **IN PROGRESS** | 27. **Kubernetes (K8s) Basics**: Crear Manifests (Deployment, Service, ConfigMaps). | Escalabilidad y Auto-curación. |
-| $\square$ | 28. **K8s Advanced**: Implementar Liveness y Readiness Probes usando los Health Checks. | Ciclo de vida del Pod. |
-| $\square$ | 29. **CI/CD Pipeline**: Configurar GitHub Actions para Build y Push de imagen. | Automatización de despliegue. |
+| **IN PROGRESS** | 27. Persistencia con PostgreSQL	Integrar DB en Docker Compose y refactorizar API a EF Core. | Persistencia de datos. |
+| $\square$ | 28. **Kubernetes (K8s) Basics**: Crear Manifests (Deployment, Service, ConfigMaps). | Escalabilidad y Auto-curación. |
+| $\square$ | 29. **K8s Advanced**: Implementar Liveness y Readiness Probes usando los Health Checks. | Ciclo de vida del Pod. |
+| $\square$ | 30. **CI/CD Pipeline**: Configurar GitHub Actions para Build y Push de imagen. | Automatización de despliegue. |
 | **$\square$** | **Finalización Etapa 8** | **Cloud Native & Orchestration** |
-| $\square$ | 29. **ASP.NET Core Identity** | Reemplazo de Auth manual por Identity. |
-| $\square$ | 30. **RBAC (Role-Based Access Control)** | Implementación de Roles (Admin/User). |
-| $\square$ | 31. **Refresh Tokens** | Estrategias avanzadas de persistencia de sesión. |
+| $\square$ | 31. **ASP.NET Core Identity** | Reemplazo de Auth manual por Identity. |
+| $\square$ | 32. **RBAC (Role-Based Access Control)** | Implementación de Roles (Admin/User). |
+| $\square$ | 33. **Refresh Tokens** | Estrategias avanzadas de persistencia de sesión. |
 | **$\square$** | **Finalización Etapa 9** | **Enterprise Grade Security** |
 
 ---

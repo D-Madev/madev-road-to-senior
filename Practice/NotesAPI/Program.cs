@@ -115,8 +115,14 @@ builder.Services.AddSwaggerGen(options =>
  * el NotesDbContext con el Lifetime Scoped. Esto garantiza que cada nueva petición 
  * HTTP obtenga una nueva conexión a la DB, evitando conflictos entre usuarios.
 */
-builder.Services.AddDbContext<NotesDbContext>(options 
-    => options.UseInMemoryDatabase("NotesDb"));
+// builder.Services.AddDbContext<NotesDbContext>(options 
+//     => options.UseInMemoryDatabase("NotesDb"));
+// Si estamos en Docker, usaremos una variable de entorno. Si es local, appsettings.
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") 
+                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<NotesDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 // Revisar salud de la API
 builder.Services.AddHealthChecks()
@@ -146,7 +152,11 @@ try
         var context = services.GetRequiredService<NotesDbContext>();
 
         // Llama al método estático que creamos
-        NotesDbContext.Initialize(services);
+        // NotesDbContext.Initialize(services);
+        
+        // Esto aplica las migraciones pendientes o crea la DB si no existe
+        context.Database.Migrate();
+
     }
 
     // Exponer el endpoint /metrics para Prometheus
