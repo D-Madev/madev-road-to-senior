@@ -13,6 +13,31 @@ services:
     networks:
       - notes-network
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090" # Panel de control de Prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - notes-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000" # Panel de control de Grafana
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - notes-network
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+
 networks:
   notes-network:
     driver: bridge
+
+volumes:
+  grafana-storage:
