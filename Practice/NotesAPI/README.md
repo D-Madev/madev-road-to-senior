@@ -69,20 +69,22 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | **Finalizacion etapa 6**	| Security Authentication & Authorization |
 | **✅** | 21. Documentación (Swagger/OpenAPI): Instala Swashbuckle y configura la generación automática de documentación. | API Documentation, Q24. |
 | **✅** | 22. Metrics (Prometheus) | Observabilidad: Endpoint `/metrics`. |
-| **✅** | 23. Performance/Load Testing (k6) | **Resiliencia:** Ver cuánto aguanta la API. |
-| **✅** | 24. Chaos Testing | Simular fallos de DB para probar el Exception Handler. |
+| **IN PROGRESS**	| 23. Distributed Caching (Redis): Implementar caché para el GET de notas y borrar caché al hacer POST/PUT. | Performance: Latencia y uso de memoria. |
+| **✅** | 24. Performance/Load Testing (k6) | **Resiliencia:** Ver cuánto aguanta la API. |
+| **✅** | 25. Chaos Testing | Simular fallos de DB para probar el Exception Handler. |
 | **✅** | **Finalización Etapa 7** | **Production Readiness** |
-| **✅** | 25. **Dockerization**: Crear `Dockerfile` y `.dockerignore`. | Contenedores e Inmutabilidad. |
-| **✅** | 26. **Orquestación Local (Docker Compose)**: Levantar API + Prometheus + Grafana. | Networking entre contenedores. |
-| **✅** | 27. Persistencia con PostgreSQL	Integrar DB en Docker Compose y refactorizar API a EF Core. | Persistencia de datos. |
-| **IN PROGRESS** | 28. **Kubernetes (K8s) Basics**: Crear Manifests (Deployment, Service, ConfigMaps). | Escalabilidad y Auto-curación. |
-| $\square$ | 29. **K8s Advanced**: Implementar Liveness y Readiness Probes usando los Health Checks. | Ciclo de vida del Pod. |
-| $\square$ | 30. **CI/CD Pipeline**: Configurar GitHub Actions para Build y Push de imagen. | Automatización de despliegue. |
-| **$\square$** | **Finalización Etapa 8** | **Cloud Native & Orchestration** |
-| $\square$ | 31. **ASP.NET Core Identity** | Reemplazo de Auth manual por Identity. |
-| $\square$ | 32. **RBAC (Role-Based Access Control)** | Implementación de Roles (Admin/User). |
-| $\square$ | 33. **Refresh Tokens** | Estrategias avanzadas de persistencia de sesión. |
-| **$\square$** | **Finalización Etapa 9** | **Enterprise Grade Security** |
+| **✅** | 26. **Dockerization**: Crear `Dockerfile` y `.dockerignore`. | Contenedores e Inmutabilidad. |
+| **✅** | 27. **Orquestación Local (Docker Compose)**: Levantar API + Prometheus + Grafana. | Networking entre contenedores. |
+| **✅** | 28. Persistencia con PostgreSQL	Integrar DB en Docker Compose y refactorizar API a EF Core. | Persistencia de datos. |
+| **✅** | 29. **Kubernetes (K8s) Basics**: Crear Manifests (Deployment, Service, ConfigMaps). | Escalabilidad y Auto-curación. |
+| **IN PROGRESS** | 30. **K8s Advanced**: Implementar Liveness y Readiness Probes usando los Health Checks. | Ciclo de vida del Pod. |
+| $\square$	| 31. K8s Networking (Ingress): Configurar NGINX Ingress Controller para acceder vía notes.local.	| Reverse Proxy y Routing avanzado. |
+| $\square$ | 32. **CI/CD Pipeline**: Configurar GitHub Actions para Build y Push de imagen. | Automatización de despliegue. |
+| $\square$ | **Finalización Etapa 8** | **Cloud Native & Orchestration** |
+| $\square$ | 33. **ASP.NET Core Identity** | Reemplazo de Auth manual por Identity. |
+| $\square$ | 34. **RBAC (Role-Based Access Control)** | Implementación de Roles (Admin/User). |
+| $\square$ | 35. **Refresh Tokens** | Estrategias avanzadas de persistencia de sesión. |
+| $\square$ | **Finalización Etapa 9** | **Enterprise Grade Security** |
 
 ---
 

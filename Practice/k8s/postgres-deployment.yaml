@@ -21,3 +21,10 @@ spec:
           value: postgres
         ports:
         - containerPort: 5432
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data # Carpeta donde Postgres guarda todo
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pvc # Conecta con el archivo creado
