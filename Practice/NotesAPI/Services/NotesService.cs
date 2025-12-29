@@ -8,8 +8,10 @@ using NotesAPI.Models;
 public class NotesService : INotesService
 {
     private readonly NotesDbContext _context;
+    private readonly IDistributedCache _cache;
+    private const string NotesCacheKey = "all_notes";
 
-    public NotesService(NotesDbContext context) => _context = context;
+    public NotesService(NotesDbContext context, IDistributedCache cache) => (_context, _cache) = (context, cache);
 
     /*
      * El acceso a la base de datos es una operación lenta (I/O Bound). 
@@ -23,7 +25,20 @@ public class NotesService : INotesService
         //if (rng.Next(1, 6) == 1) // 20% de probabilidad de fallo
         //    throw new Exception("🔥 CAOS: Error crítico inesperado en el sistema de persistencia.");
 
-        return await _context.Notes.ToListAsync();
+        var cachedNotes = await _cache.GetStringAsync(NotesCacheKey);
+
+        if (!string.IsNullOrEmpty(cachedNotes)) return JsonSerializer.Deserialize<List<Note>>(cachedNotes) ?? new List<Note>();
+        
+        // Si no está, ir a la BD
+        var notes = await _context.Notes.ToListAsync();
+
+        // Guardar en Redis por 10 minutos
+        var options = new DistributedCacheEntryOptions()
+            .SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+
+        await _cache.SetStringAsync(NotesCacheKey, JsonSerializer.Serialize(notes), options);
+        
+        return notes;
     }
 
     public async Task<Note?> GetByIdAsync(int id)
@@ -45,6 +60,9 @@ public class NotesService : INotesService
         await _context.Notes.AddAsync(newNote);
         await _context.SaveChangesAsync();
 
+        // Invalidar la cache
+        await _cache.RemoveAsync(NotesCacheKey);
+
         return newNote;
     }
 
@@ -63,6 +81,10 @@ public class NotesService : INotesService
         noteToUpdate.Content = noteUpdate.Content;
 
         await _context.SaveChangesAsync();
+
+        // Invalidar la cache
+        await _cache.RemoveAsync(NotesCacheKey);
+
         return true;
     }
 
@@ -78,6 +100,10 @@ public class NotesService : INotesService
 
         _context.Notes.Remove(noteToDelete);
         await _context.SaveChangesAsync();
+
+        // Invalidar la cache
+        await _cache.RemoveAsync(NotesCacheKey);
+
         return true;
     }
 }

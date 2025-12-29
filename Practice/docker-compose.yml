@@ -50,6 +50,15 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
 
+  redis:
+    image: redis:alpine
+    container_name: redis_cache
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - notes-network
+
 networks:
   notes-network:
     driver: bridge

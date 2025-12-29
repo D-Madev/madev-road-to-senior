@@ -69,7 +69,7 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | **Finalizacion etapa 6**	| Security Authentication & Authorization |
 | **✅** | 21. Documentación (Swagger/OpenAPI): Instala Swashbuckle y configura la generación automática de documentación. | API Documentation, Q24. |
 | **✅** | 22. Metrics (Prometheus) | Observabilidad: Endpoint `/metrics`. |
-| **IN PROGRESS**	| 23. Distributed Caching (Redis): Implementar caché para el GET de notas y borrar caché al hacer POST/PUT. | Performance: Latencia y uso de memoria. |
+| **✅**	| 23. Distributed Caching (Redis): Implementar caché para el GET de notas y borrar caché al hacer POST/PUT. | Performance: Latencia y uso de memoria. |
 | **✅** | 24. Performance/Load Testing (k6) | **Resiliencia:** Ver cuánto aguanta la API. |
 | **✅** | 25. Chaos Testing | Simular fallos de DB para probar el Exception Handler. |
 | **✅** | **Finalización Etapa 7** | **Production Readiness** |

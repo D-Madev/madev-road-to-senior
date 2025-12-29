@@ -124,6 +124,16 @@ var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"
 builder.Services.AddDbContext<NotesDbContext>(options =>
     options.UseNpgsql(connectionString));
 
+var redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING") 
+                            ?? builder.Configuration.GetConnectionString("RedisConnection") 
+                            ?? "localhost:6379"; // Fallback por si te olvidás de configurarlo
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnectionString;
+    options.InstanceName = "NotesAPI_";
+});
+
 // Revisar salud de la API
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<NotesDbContext>(name: "NotesDb");
