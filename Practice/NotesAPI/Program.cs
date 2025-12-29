@@ -145,18 +145,28 @@ try
 
     var app = builder.Build();
 
-    /* Sembramos datos y contexto */
-    using (var scope = app.Services.CreateScope())
+    for (int i = 0; i < 5; i++)
     {
-        var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<NotesDbContext>();
+        try
+        {
+            /* Sembramos datos y contexto */
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<NotesDbContext>();
 
-        // Llama al método estático que creamos
-        // NotesDbContext.Initialize(services);
-        
-        // Esto aplica las migraciones pendientes o crea la DB si no existe
-        context.Database.Migrate();
+            // Llama al método estático que creamos
+            // NotesDbContext.Initialize(services);
 
+            // Aplica las migraciones pendientes o crea la DB si no existe
+            context.Database.Migrate();
+            break; // Si tiene éxito, salimos del bucle
+        }
+        catch (Exception ex)
+        {
+            if (i == 4) throw; // Si falló 5 veces, apagamos la app
+            Console.WriteLine("Postgres no está listo, reintentando en 2 segundos...");
+            Thread.Sleep(2000);
+        }
     }
 
     // Exponer el endpoint /metrics para Prometheus
