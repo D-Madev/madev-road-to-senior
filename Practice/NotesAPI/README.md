@@ -78,8 +78,8 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | 28. Persistencia con PostgreSQL	Integrar DB en Docker Compose y refactorizar API a EF Core. | Persistencia de datos. |
 | **✅** | 29. **Kubernetes (K8s) Basics**: Crear Manifests (Deployment, Service, ConfigMaps). | Escalabilidad y Auto-curación. |
 | **✅** | 30. **K8s Advanced**: Implementar Liveness y Readiness Probes usando los Health Checks. | Ciclo de vida del Pod. |
-| **IN PROGRESS**	| 31. K8s Networking (Ingress): Configurar NGINX Ingress Controller para acceder vía notes.local.	| Reverse Proxy y Routing avanzado. |
-| $\square$ | 32. **CI/CD Pipeline**: Configurar GitHub Actions para Build y Push de imagen. | Automatización de despliegue. |
+| **✅** | 31. K8s Networking (Ingress): Configurar NGINX Ingress Controller para acceder vía notes.local.	| Reverse Proxy y Routing avanzado. |
+| **IN PROGRESS** | 32. **CI/CD Pipeline**: Configurar GitHub Actions para Build y Push de imagen. | Automatización de despliegue. |
 | $\square$ | **Finalización Etapa 8** | **Cloud Native & Orchestration** |
 | $\square$ | 33. **ASP.NET Core Identity** | Reemplazo de Auth manual por Identity. |
 | $\square$ | 34. **RBAC (Role-Based Access Control)** | Implementación de Roles (Admin/User). |
