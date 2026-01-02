@@ -136,7 +136,8 @@ builder.Services.AddStackExchangeRedisCache(options =>
 
 // Revisar salud de la API
 builder.Services.AddHealthChecks()
-    .AddDbContextCheck<NotesDbContext>(name: "NotesDb");
+    .AddDbContextCheck<NotesDbContext>(name: "Postgres")
+    .AddRedis(redisConnectionString, name: "Redis");
 
 // 11. Registrar el service layer
 builder.Services.AddScoped<INotesService, NotesService>();

@@ -2,8 +2,10 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NotesAPI.Data;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 using NotesAPI.Models;
+using NotesAPI.Data;
 
 public class NotesService : INotesService
 {
@@ -27,7 +29,7 @@ public class NotesService : INotesService
 
         var cachedNotes = await _cache.GetStringAsync(NotesCacheKey);
 
-        if (!string.IsNullOrEmpty(cachedNotes)) return JsonSerializer.Deserialize<List<Note>>(cachedNotes) ?? new List<Note>();
+        if (!string.IsNullOrEmpty(cachedNotes)) return System.Text.Json.JsonSerializer.Deserialize<List<Note>>(cachedNotes) ?? new List<Note>();
         
         // Si no está, ir a la BD
         var notes = await _context.Notes.ToListAsync();

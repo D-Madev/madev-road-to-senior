@@ -25,3 +25,15 @@ spec:
             name: notes-api-config
         - secretRef:
             name: notes-api-secrets
+        livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15 # Espera 15 seg antes de empezar a chequear
+            periodSeconds: 20       # Chequea cada 20 seg
+        readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5  # Empieza casi de inmediato
+            periodSeconds: 10

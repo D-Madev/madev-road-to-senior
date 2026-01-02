@@ -4,6 +4,7 @@ echo "🚀 Iniciando despliegue en Kubernetes..."
 
 # 1. Construir la imagen de la API (Docker)
 echo "📦 Buildeando imagen de la API..."
+docker compose up -d --build
 docker build -t notes-api:latest .
 
 # 2. Aplicar los manifiestos de Kubernetes
