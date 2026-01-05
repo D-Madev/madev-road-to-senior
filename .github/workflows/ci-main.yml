@@ -1,60 +1,60 @@
-name: CI (main) # Nombre del flujo de trabajo
+# name: CI (main) # Nombre del flujo de trabajo
 
-# Este flujo de trabajo se dispara en push y pull requests a la rama 'main'
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+# # Este flujo de trabajo se dispara en push y pull requests a la rama 'main'
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
 
-jobs:
-  build:
-    name: build
-    runs-on: ubuntu-latest # Se ejecuta en una máquina virtual Ubuntu
+# jobs:
+#   build:
+#     name: build
+#     runs-on: ubuntu-latest # Se ejecuta en una máquina virtual Ubuntu
 
-    steps:
-      # Paso 1: Obtener el código del repositorio
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#     steps:
+#       # Paso 1: Obtener el código del repositorio
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-      # Paso 2: Configurar el entorno de .NET
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x' # Usa la última versión menor de 8.0
+#       # Paso 2: Configurar el entorno de .NET
+#       - name: Setup .NET
+#         uses: actions/setup-dotnet@v4
+#         with:
+#           dotnet-version: '8.0.x' # Usa la última versión menor de 8.0
 
-      # Paso 3: Cachear paquetes NuGet para acelerar las ejecuciones futuras
-      - name: Cache NuGet packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+#       # Paso 3: Cachear paquetes NuGet para acelerar las ejecuciones futuras
+#       - name: Cache NuGet packages
+#         uses: actions/cache@v4
+#         with:
+#           path: ~/.nuget/packages
+#           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+#           restore-keys: |
+#             ${{ runner.os }}-nuget-
 
-      # Paso 4: Restaurar dependencias del proyecto
-      - name: Restore
-        working-directory: CourseProjects/BlogCore
-        run: dotnet restore
+#       # Paso 4: Restaurar dependencias del proyecto
+#       - name: Restore
+#         working-directory: CourseProjects/BlogCore
+#         run: dotnet restore
 
-      # Paso 5: Compilar el proyecto en configuración Release
-      - name: Build
-        working-directory: CourseProjects/BlogCore
-        run: dotnet build --configuration Release --no-restore
+#       # Paso 5: Compilar el proyecto en configuración Release
+#       - name: Build
+#         working-directory: CourseProjects/BlogCore
+#         run: dotnet build --configuration Release --no-restore
 
-      # Paso 6: Ejecutar pruebas unitarias si existen proyectos de prueba
-      - name: Run tests (if any)
-        working-directory: CourseProjects/BlogCore
-        run: |
-          set -e
-          # Buscar proyectos de prueba
-          tests=$(find . -type f \( -name "*Test*.csproj" -o -name "*Tests*.csproj" \) -print)
-          if [ -z "$tests" ]; then
-            echo "No test projects found - skipping tests"
-          else
-            for t in $tests; do
-              echo "Running tests for: $t"
-              # Ejecutar pruebas sin recompilar
-              dotnet test "$t" --no-build --verbosity normal
-            done
-          fi
+#       # Paso 6: Ejecutar pruebas unitarias si existen proyectos de prueba
+#       - name: Run tests (if any)
+#         working-directory: CourseProjects/BlogCore
+#         run: |
+#           set -e
+#           # Buscar proyectos de prueba
+#           tests=$(find . -type f \( -name "*Test*.csproj" -o -name "*Tests*.csproj" \) -print)
+#           if [ -z "$tests" ]; then
+#             echo "No test projects found - skipping tests"
+#           else
+#             for t in $tests; do
+#               echo "Running tests for: $t"
+#               # Ejecutar pruebas sin recompilar
+#               dotnet test "$t" --no-build --verbosity normal
+#             done
+#           fi

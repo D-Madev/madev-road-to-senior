@@ -1,0 +1,51 @@
+name: NotesAPI CI/CD
+
+on:
+    push:
+        branches: 
+            - "main"
+            - "dev"
+        paths:
+            - "Practice/NotesAPI/**"
+
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: '10.0.x'
+            cache: true
+
+        - name: Restore dependencies
+          run: dotnet restore Practice/NotesAPI/NotesAPI.sln
+
+        - name: Build solution
+          run: dotnet build Practice/NotesAPI/NotesAPI.sln --no-restore --configuration Release
+
+        - name: Run tests
+          run: dotnet test Practice/NotesAPI/NotesAPI.sln --no-build --no-restore --configuration Release
+    
+    docker-push:
+        needs: build-and-test
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/main' # Solo subir si la rama es la principal
+        steps:
+        - uses: actions/checkout@v4
+
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+
+        - name: Build and push Docker image
+          uses: docker/build-push-action@v5
+          with:
+            context: ./Practice/NotesAPI
+            file: ./Practice/NotesAPI/Dockerfile
+            push: true
+            tags: ${{ secrets.DOCKER_USERNAME }}/notes-api:latest
