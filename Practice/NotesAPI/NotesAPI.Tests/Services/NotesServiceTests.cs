@@ -1,13 +1,15 @@
 ﻿namespace NotesAPI.Tests.Services;
 
-using Xunit;
-using NotesAPI.Data;
-using NotesAPI.Models;
-using NotesAPI.Services;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
+using NotesAPI.Services;
+using NotesAPI.Models;
+using NotesAPI.Data;
+using System.Linq;
+using System;
+using Xunit;
+using Moq;
 
 public class NotesServiceTests : IDisposable
 {
