@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notes-api-config
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  DB_CONNECTION_STRING: "Host=postgres;Port=5432;Database=NotesDb;Username=postgres;Password=postgres"
+  REDIS_CONNECTION_STRING: "redis:6379"

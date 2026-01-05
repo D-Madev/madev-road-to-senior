@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 5s # Le pide datos a la API cada 5 segundos
+
+scrape_configs:
+  - job_name: "notes-api-monitor"
+    static_configs:
+      - targets: ["notes-api:8080"] # IMPORTANTE: Usamos el nombre del servicio 'notes-api' definido en el compose
