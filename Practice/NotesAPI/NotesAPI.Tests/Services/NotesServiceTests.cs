@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 public class NotesServiceTests : IDisposable
 {
+    private readonly Mock<IDistributedCache> _cacheMock;
     private readonly NotesDbContext _context;
     private readonly NotesService _service;
 
@@ -22,6 +23,8 @@ public class NotesServiceTests : IDisposable
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             .Options;
 
+        _cacheMock = new Mock<IDistributedCache>();
+
         // Instanciar el contexto y el servicio
         _context = new NotesDbContext(options);
 
@@ -29,7 +32,7 @@ public class NotesServiceTests : IDisposable
         _context.Database.EnsureDeleted();
         _context.Database.EnsureCreated();
         
-        _service = new NotesService(_context);
+        _service = new NotesService(_context, _cacheMock.Object);
     }
 
     // IDisposable: Se ejecuta luego de cada Test.
