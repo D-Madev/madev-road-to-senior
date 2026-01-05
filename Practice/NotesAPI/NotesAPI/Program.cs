@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using HealthChecks.Redis;
 using NotesAPI.Data;
 using NotesAPI.Services;
 using Prometheus;
@@ -176,6 +178,7 @@ try
         {
             if (i == 4) throw; // Si falló 5 veces, apagamos la app
             Console.WriteLine("Postgres no está listo, reintentando en 2 segundos...");
+            Log.Error(ex, "Postgres no está listo, reintentando en 2 segundos...");
             Thread.Sleep(2000);
         }
     }
