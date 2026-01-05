@@ -19,6 +19,7 @@ jobs:
           with:
             dotnet-version: '10.0.x'
             cache: true
+            cache-dependency-path: Practice/NotesAPI/NotesAPI.sln
 
         - name: Restore dependencies
           run: dotnet restore Practice/NotesAPI/NotesAPI.sln
