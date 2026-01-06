@@ -17,6 +17,16 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.ConfigureAppConfiguration((context, config) =>
+        {
+            config.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                // Asegúrate de que la ruta "Jwt:Key" coincida con la que usas en Program.cs
+                ["Jwt:Key"] = "clave_secreta_de_prueba_para_tests_12345",
+                ["Jwt:Issuer"] = "NotesAPI",
+                ["Jwt:Audience"] = "NotesAPIUsers"
+            });
+        });
         // Sobreescribimos la configuracion de la app.
         builder.ConfigureServices(services =>
         {
