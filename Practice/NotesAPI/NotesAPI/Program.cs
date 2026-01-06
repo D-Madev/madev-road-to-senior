@@ -19,7 +19,7 @@ var configuration = builder.Configuration;
 // CONFIGURACIÓN JWT
 // Buscamos la clave. Si no existe (como en el servidor de integración), 
 // usamos una clave de emergencia de 32 caracteres para que la API no explote al iniciar.
-var jwtKeyString = configuration["Jwt:Key"] ?? "Clave_Secreta_De_Emergencia_De_32_Caracteres_Minimo";
+var jwtKeyString = configuration["Jwt:Key"] ?? "Esta_Es_Una_Clave_Muy_Larga_De_Prueba_32_Chars";
 var key = Encoding.ASCII.GetBytes(jwtKeyString);
 
 builder.Services.AddAuthentication(options =>
@@ -37,29 +37,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = false,
         ValidateAudience = false,
-        // Es buena práctica validar que el token no haya expirado incluso en tests
         ValidateLifetime = true 
-    };
-});
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        // Usamos la clave leída
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        // Para este demo, no validamos el emisor
-        ValidateIssuer = false,
-        // Para este demo, no validamos la audiencia
-        ValidateAudience = false
     };
 });
 
