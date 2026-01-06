@@ -17,8 +17,30 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 // CONFIGURACIÓN JWT
-//  Leemos la clave desde la sección "Jwt:Key" de appsettings, Secret Manager o Variables de Entorno.
-var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]!);
+// Buscamos la clave. Si no existe (como en el servidor de integración), 
+// usamos una clave de emergencia de 32 caracteres para que la API no explote al iniciar.
+var jwtKeyString = configuration["Jwt:Key"] ?? "Clave_Secreta_De_Emergencia_De_32_Caracteres_Minimo";
+var key = Encoding.ASCII.GetBytes(jwtKeyString);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        // Es buena práctica validar que el token no haya expirado incluso en tests
+        ValidateLifetime = true 
+    };
+});
 
 builder.Services.AddAuthentication(options =>
 {
