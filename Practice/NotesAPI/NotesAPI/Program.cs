@@ -170,13 +170,20 @@ try
             // Llama al método estático que creamos
             // NotesDbContext.Initialize(services);
 
-            // Aplica las migraciones pendientes o crea la DB si no existe
-            context.Database.Migrate();
+            // Aplica las migraciones pendientes o crea la DB si no existe y si no es en memoria
+            if (!context.Database.ProviderName.Contains("InMemory")) 
+            {
+                context.Database.Migrate();
+            }
             break; // Si tiene éxito, salimos del bucle
         }
         catch (Exception ex)
         {
             if (i == 4) throw; // Si falló 5 veces, apagamos la app
+
+            // Si estamos en Testing, no esperes 2 segundos, falla rápido o ignora
+            if (app.Environment.IsEnvironment("Testing")) break;
+
             Console.WriteLine("Postgres no está listo, reintentando en 2 segundos...");
             Log.Error(ex, "Postgres no está listo, reintentando en 2 segundos...");
             Thread.Sleep(2000);

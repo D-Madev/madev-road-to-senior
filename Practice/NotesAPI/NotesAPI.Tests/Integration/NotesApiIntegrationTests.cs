@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using NotesAPI.Models;
 using System.Net;
 using System.Text;
+using System.Net.Http.Json;
 using System.Text.Json;
 using NotesAPI;
 
@@ -62,17 +63,13 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
     public async Task<Note> CreateNoteAsync(string title, string? content)
     {
         var note = new Note { Title = title, Content = string.IsNullOrEmpty(content)? "" : content };
-        var jsonContent = new StringContent(
-            JsonSerializer.Serialize(note), 
-            Encoding.UTF8, 
-            "application/json"
-        );
-        var response = await _client.PostAsync("/notes", jsonContent);
+        
+        var response = await _client.PostAsJsonAsync("/notes", note);
         response.EnsureSuccessStatusCode();
 
         // Deserializa la respuesta para obtener ID generado por la DB.
-        var responseString = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<Note>(responseString, _jsonOptions)!;
+        var createdNote = await response.Content.ReadFromJsonAsync<Note>(_jsonOptions);
+        return createdNote!;
     }
 
     [Fact]
@@ -129,27 +126,24 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
     {
         // ARRANGE
         var newNote = new Note { Title = "E2E Test Note", Content = "Full pipeline check" };
-        var jsonContent = new StringContent(
-            JsonSerializer.Serialize(newNote),
-            Encoding.UTF8,
+        
+        // ACT - Usando el método de extensión de System.Net.Http.Json
+        var response = await _client.PostAsync("/notes", new StringContent(
+            JsonSerializer.Serialize(newNote), 
+            Encoding.UTF8, 
             "application/json"
-        );
-
-        // ACT
-        var response = await _client.PostAsync("/notes", jsonContent);
+        ));
 
         // ASSERT
-        // Verifica el código HTTP (201 Created)
-        // Lanza excepción si el código es 4xx o 5xx
-        response.EnsureSuccessStatusCode(); 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-
-        // Verifica el encabezado Location 
         Assert.NotNull(response.Headers.Location);
 
-        // Ver si la nota realmente se guardó.
-        var locationUri = response.Headers.Location;
-        var getResponse = await _client.GetAsync(locationUri);
+        // Aquí es donde necesitabas el ReadFromJsonAsync
+        var createdNote = await response.Content.ReadFromJsonAsync<Note>(_jsonOptions);
+        
+        
+        // Verificamos que se pueda recuperar
+        var getResponse = await _client.GetAsync($"/notes/{createdNote!.Id}");
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
     }
 
@@ -214,7 +208,6 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
 
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-
 
         var getResponse = await _client.GetAsync($"/notes/{createdNote.Id}");
         Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);

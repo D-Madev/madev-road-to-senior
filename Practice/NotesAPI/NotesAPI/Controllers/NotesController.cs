@@ -10,7 +10,7 @@ using NotesAPI.Services;
 /// </summary>
 [Authorize]
 [ApiController]
-[Route("[controller]")]
+[Route("notes")]
 [Produces("application/json")]
 public class NotesController : ControllerBase
 {
@@ -47,7 +47,7 @@ public class NotesController : ControllerBase
     /// <param name="id">Identificador único de la nota.</param>
     /// <response code="200">Retorna la nota solicitada.</response>
     /// <response code="404">Si la nota con el ID especificado no existe.</response>
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetNote")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdAsync(int id)
@@ -81,10 +81,10 @@ public class NotesController : ControllerBase
         */
         var createdNote = await _service.CreateAsync(newNote);
 
-        if (createdNote == null) return NotFound("Error al crear la nota.");
+        if (createdNote == null) return BadRequest("Error al crear la nota.");
 
         // Devolver 201 Created (Convención RESTful)
-        return Created($"/{ControllerContext.RouteData.Values["controller"]}/{newNote.Id}", newNote);
+        return CreatedAtRoute("GetNote", new { id = createdNote.Id }, createdNote);
     }
 
     /// <summary>
