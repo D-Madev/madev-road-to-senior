@@ -182,7 +182,7 @@ try
             // NotesDbContext.Initialize(services);
 
             // Aplica las migraciones pendientes o crea la DB si no existe y si no es en memoria
-            if (!context.Database.ProviderName.Contains("InMemory")) 
+            if (context.Database.ProviderName?.Contains("InMemory") == false) 
             {
                 context.Database.Migrate();
             }
