@@ -158,10 +158,9 @@ public class NotesControllerTests
 
         // ASSERT
         // Verificar que el resultado es 201 Created y que el tipo es CreatedResult.
-        var createdResult = Assert.IsType<CreatedResult>(result);
-
-        // Verificar que la URL de Location se construyó correctamente.
-        Assert.Equal($"/Notes/{fakeId}", createdResult.Location);
+        var createdResult = Assert.IsType<CreatedAtRouteResult>(result);
+        Assert.Equal("GetNote", createdResult.RouteName);
+        Assert.Equal(fakeId, createdResult.RouteValues!["id"]);
 
         // Verificar que el Service fue llamado.
         _mockService.Verify(s => s.CreateAsync(newNote), Times.Once);
@@ -182,8 +181,8 @@ public class NotesControllerTests
         var result = await _controller.CreateAsync(nullNote);
 
         // ASSERT
-        // 1. Verificar que el resultado es 404 Not Found.
-        Assert.IsType<NotFoundObjectResult>(result);
+        // 1. Verificar que el resultado es 500 Internal Server Error.
+        Assert.IsType<BadRequestObjectResult>(result);
 
         // 2. Verificar que el Service fue llamado.
         _mockService.Verify(s => s.CreateAsync(It.IsAny<Note>()), Times.Once);

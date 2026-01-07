@@ -1,14 +1,16 @@
 ﻿namespace NotesAPI.Tests.Integration;
 
-using Xunit;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Net.Http;
 using NotesAPI.Models;
 using System.Net;
 using System.Text;
-using System.Text.Json;
 using NotesAPI;
+using Xunit;
 
 // IClassFixture asegura que la factoría se inicializa una vez por clase.
 public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactory<Program>>
@@ -16,17 +18,33 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
     private readonly HttpClient _client;
     // Opciones para deserializar JSON (ignorando mayúsculas/minúsculas)
     private readonly JsonSerializerOptions _jsonOptions;
-    // Campo para guardar el token jwt
-    private readonly string _jwtToken;
 
     public NotesApiIntegrationTests(CustomWebApplicationFactory<Program> factory)
     {
         // Crea un cliente HTTP para interactuar con la aplicación en memoria.
         _client = factory.CreateClient();
         _jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        _jwtToken = GetJwtToken().GetAwaiter().GetResult();
-        // Configurar el cliente para usar el token por defecto en TODAS las solicitudes
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _jwtToken);
+    }
+
+    private async Task EnsureAuthenticatedAsync()
+    {
+        if (_client.DefaultRequestHeaders.Authorization == null)
+        {
+            var loginRequest = new { username = "testuser", password = "password" };
+            
+            // Usamos PostAsJsonAsync que es más seguro que StringContent manual
+            var response = await _client.PostAsJsonAsync("/auth/login", loginRequest);
+            
+            // ESTO ES CLAVE: Si el login falla, el test debe morir aquí con el detalle
+            if (!response.IsSuccessStatusCode)
+            {
+                var detail = await response.Content.ReadAsStringAsync();
+                throw new Exception($"EL LOGIN FALLÓ: Status {response.StatusCode}. Detalle: {detail}");
+            }
+
+            var tokenData = await response.Content.ReadFromJsonAsync<TokenResponse>(_jsonOptions);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenData!.Token);
+        }
     }
 
     // Clase interna para deserializar la respuesta del login
@@ -61,18 +79,16 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
     // Healper para crear notas
     public async Task<Note> CreateNoteAsync(string title, string? content)
     {
+        await EnsureAuthenticatedAsync();
+
         var note = new Note { Title = title, Content = string.IsNullOrEmpty(content)? "" : content };
-        var jsonContent = new StringContent(
-            JsonSerializer.Serialize(note), 
-            Encoding.UTF8, 
-            "application/json"
-        );
-        var response = await _client.PostAsync("/notes", jsonContent);
+        
+        var response = await _client.PostAsJsonAsync("/notes", note);
         response.EnsureSuccessStatusCode();
 
         // Deserializa la respuesta para obtener ID generado por la DB.
-        var responseString = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<Note>(responseString, _jsonOptions)!;
+        var createdNote = await response.Content.ReadFromJsonAsync<Note>(_jsonOptions);
+        return createdNote!;
     }
 
     [Fact]
@@ -97,6 +113,7 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
     [Fact]
     public async Task GetById_ReturnsOk_WhenNotesExists()
     {
+        await EnsureAuthenticatedAsync();
         // Arrange
         var createdNote = await CreateNoteAsync("Specific Note", "Content for specific note.");
 
@@ -117,6 +134,7 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
     [Fact]
     public async Task GetById_ReturnsNotFound_WhenNoteDoesNotExist()
     {
+        await EnsureAuthenticatedAsync();
         // Act
         var response = await _client.GetAsync($"/notes/99999");
         
@@ -127,35 +145,30 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
     [Fact]
     public async Task PostNote_Returns201CreatedAndLocationHeader()
     {
+        await EnsureAuthenticatedAsync();
         // ARRANGE
         var newNote = new Note { Title = "E2E Test Note", Content = "Full pipeline check" };
-        var jsonContent = new StringContent(
-            JsonSerializer.Serialize(newNote),
-            Encoding.UTF8,
-            "application/json"
-        );
-
-        // ACT
-        var response = await _client.PostAsync("/notes", jsonContent);
+        
+        // ACT - Usando el método de extensión de System.Net.Http.Json
+        var response = await _client.PostAsJsonAsync("/notes", newNote);
 
         // ASSERT
-        // Verifica el código HTTP (201 Created)
-        // Lanza excepción si el código es 4xx o 5xx
-        response.EnsureSuccessStatusCode(); 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-
-        // Verifica el encabezado Location 
         Assert.NotNull(response.Headers.Location);
 
-        // Ver si la nota realmente se guardó.
-        var locationUri = response.Headers.Location;
-        var getResponse = await _client.GetAsync(locationUri);
+        // Aquí es donde necesitabas el ReadFromJsonAsync
+        var createdNote = await response.Content.ReadFromJsonAsync<Note>(_jsonOptions);
+        
+        
+        // Verificamos que se pueda recuperar
+        var getResponse = await _client.GetAsync($"/notes/{createdNote!.Id}");
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
     }
 
     [Fact]
     public async Task Put_ReturnsNoContent_WhenNoteIsUpdated()
     {
+        await EnsureAuthenticatedAsync();
         // Arrange
         var createdNote = await CreateNoteAsync("Note to Update", "Initial Content");
 
@@ -166,14 +179,9 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
             Title = "Updated Title", 
             Content = "Updated Content" 
         };
-        var jsonContent = new StringContent(
-            JsonSerializer.Serialize(updateData),
-            Encoding.UTF8,
-            "application/json"
-        );
 
         // Act
-        var response = await _client.PutAsync($"/notes/{createdNote.Id}", jsonContent);
+        var response = await _client.PutAsJsonAsync($"/notes/{createdNote.Id}", updateData);
 
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
@@ -188,16 +196,17 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
     [Fact]
     public async Task Put_ReturnsBadRequest_WhenIdMismatch()
     {
+        await EnsureAuthenticatedAsync();
         // ARRANGE
-        var note = new Note { Id = 1, Title = "Test", Content = "Test" };
+        var note = new Note { Title = "Test", Content = "Test" };
         var jsonContent = new StringContent(
             JsonSerializer.Serialize(note), 
             Encoding.UTF8, 
             "application/json"
         );
 
-        // ACT: ID en URL (5) != ID en Body (1)
-        var response = await _client.PutAsync("/notes/5", jsonContent);
+        // ACT: ID en URL (x+10) != ID en Body (x)
+        var response = await _client.PutAsync($"/notes/{note.Id+10}", jsonContent);
 
         // ASSERT
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -206,6 +215,7 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
     [Fact]
     public async Task Delete_ReturnsNoContent_WhenNoteIsDeleted()
     {
+        await EnsureAuthenticatedAsync();
         // Arrange
         var createdNote = await CreateNoteAsync("ToDelete", "Bye bye");
 
@@ -214,7 +224,6 @@ public class NotesApiIntegrationTests : IClassFixture<CustomWebApplicationFactor
 
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-
 
         var getResponse = await _client.GetAsync($"/notes/{createdNote.Id}");
         Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);

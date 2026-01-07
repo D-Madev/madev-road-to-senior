@@ -1,35 +1,53 @@
 ﻿namespace NotesAPI.Tests.Services;
 
-using Xunit;
-using NotesAPI.Data;
-using NotesAPI.Models;
-using NotesAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
+using NotesAPI.Services;
+using NotesAPI.Models;
+using NotesAPI.Data;
+using System.Linq;
+using System;
+using Xunit;
+using Moq;
 
 public class NotesServiceTests : IDisposable
 {
+    private readonly Mock<IDistributedCache> _cacheMock;
     private readonly NotesDbContext _context;
     private readonly NotesService _service;
 
     public NotesServiceTests()
     {
+        // Creamos un contenedor de servicios aislado para este test
+        var serviceProvider = new ServiceCollection()
+        .AddEntityFrameworkInMemoryDatabase()
+        .BuildServiceProvider();
+
         // Configurar la BD
         // Usamos un GUID único para que cada test tenga una DB limpia y aislada.
         var options = new DbContextOptionsBuilder<NotesDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .UseInternalServiceProvider(serviceProvider)
             .Options;
 
+        _cacheMock = new Mock<IDistributedCache>();
         // Instanciar el contexto y el servicio
         _context = new NotesDbContext(options);
-
+        
         // Asegura que la DB está limpia antes de CADA test
-        _context.Database.EnsureDeleted();
         _context.Database.EnsureCreated();
         
-        _service = new NotesService(_context);
+        // Limpiar los datos del Seeding (Task 1, Task 2) 
+        // para que la base de datos empiece REALMENTE vacía.
+        if (_context.Notes.Any())
+        {
+            _context.Notes.RemoveRange(_context.Notes);
+            _context.SaveChanges();
+        }
+
+        _service = new NotesService(_context, _cacheMock.Object);
     }
 
     // IDisposable: Se ejecuta luego de cada Test.
@@ -71,17 +89,16 @@ public class NotesServiceTests : IDisposable
     public async Task GetByIdAsync_ReturnsNote_WhenIdIsValidAndExists()
     {
         // Arrange
-        var idOfNote = 5;
-        var noteToFind = new Note { Id = idOfNote, Title = "Test Note", Content = "Content" };
+        var noteToFind = new Note { Title = "Test Note", Content = "Content" };
         _context.Notes.Add(noteToFind);
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _service.GetByIdAsync(idOfNote);
+        var result = await _service.GetByIdAsync(noteToFind.Id);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(idOfNote, result.Id);
+        Assert.Equal(noteToFind.Id, result.Id);
         Assert.Equal("Test Note", result.Title);
     }
 
@@ -150,23 +167,25 @@ public class NotesServiceTests : IDisposable
     public async Task UpdateAsync_ReturnsTrueAndUpdatesNote_WhenSuccessful()
     {
         // Arrange
-        int noteId = 1;
-        _context.Notes.Add(new Note { Id = noteId, Title = "Old Title", Content = "Old Content" });
+        var entry = _context.Notes.Add(new Note { Title = "Old Title", Content = "Old Content" });
         await _context.SaveChangesAsync();
-        // Desconectar para simular un update.
-        _context.Entry(_context.Notes.Find(noteId)!).State = EntityState.Detached; 
+        
+        var validId = entry.Entity.Id;
 
-        var noteUpdate = new Note { Id = noteId, Title = "New Title", Content = "New Content" };
+        // Desconectar para simular un update.
+        _context.Entry(entry.Entity).State = EntityState.Detached; 
+
+        var noteUpdate = new Note { Id = validId, Title = "New Title", Content = "New Content" };
 
         // Act
-        var result = await _service.UpdateAsync(noteId, noteUpdate);
+        var result = await _service.UpdateAsync(validId, noteUpdate);
 
         // Assert
         // Verifica que la operación fue exitosa (devuelve true)
         Assert.True(result); 
 
         // Verifica que los cambios se reflejan en la DB
-        var updatedNote = await _context.Notes.FindAsync(noteId);
+        var updatedNote = await _context.Notes.FindAsync(validId);
         Assert.NotNull(updatedNote);
         Assert.Equal("New Title", updatedNote.Title);
         Assert.Equal("New Content", updatedNote.Content);
@@ -226,18 +245,18 @@ public class NotesServiceTests : IDisposable
     public async Task DeleteAsync_ReturnsTrueAndRemovesNote_WhenSuccessful()
     {
         // Arrange
-        int noteId = 1;
-        _context.Notes.Add(new Note { Id = noteId, Title = "To Delete" });
+        var entry = _context.Notes.Add(new Note { Title = "To Delete" });
         await _context.SaveChangesAsync();
+        var validId = entry.Entity.Id; // ID Dinámico
 
         // Act
-        var result = await _service.DeleteAsync(noteId);
+        var result = await _service.DeleteAsync(validId);
 
         // Assert
         Assert.True(result); // Verifica éxito
 
         // Verificar que la nota fue eliminada de la DB
-        var noteInDb = await _context.Notes.FindAsync(noteId);
+        var noteInDb = await _context.Notes.FindAsync(validId);
         Assert.Null(noteInDb); // Debe ser null
     }
 

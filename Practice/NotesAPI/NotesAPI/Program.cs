@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using NotesAPI.Data;
+using HealthChecks.Redis;
 using NotesAPI.Services;
+using NotesAPI.Data;
+using System.Text;
 using Prometheus;
 using Serilog;
-using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +18,14 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 // CONFIGURACIÓN JWT
-//  Leemos la clave desde la sección "Jwt:Key" de appsettings, Secret Manager o Variables de Entorno.
-var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]!);
+// Buscamos la clave. Si no existe (como en el servidor de integración), 
+// usamos una clave de emergencia de 32 caracteres para que la API no explote al iniciar.
+var jwtKeyString = 
+    configuration["Jwt:Key"] ?? 
+    "Esta_Es_Una_Clave_Muy_Larga_De_Prueba_32_Chars";
+var key = Encoding.UTF8.GetBytes(jwtKeyString);
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -25,17 +34,21 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    // AÑADE ESTA LÍNEA AQUÍ:
+    options.UseSecurityTokenValidators = true; // Esto obliga a usar el validador compatible con JwtSecurityToken
+
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
+    var signingKey = new SymmetricSecurityKey(key);
+    signingKey.KeyId = "NotesApiKeyId";
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        // Usamos la clave leída
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        // Para este demo, no validamos el emisor
-        ValidateIssuer = false,
-        // Para este demo, no validamos la audiencia
-        ValidateAudience = false
+        IssuerSigningKey = signingKey,
+        ValidateIssuer = false, 
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
     };
 });
 
@@ -168,14 +181,22 @@ try
             // Llama al método estático que creamos
             // NotesDbContext.Initialize(services);
 
-            // Aplica las migraciones pendientes o crea la DB si no existe
-            context.Database.Migrate();
+            // Aplica las migraciones pendientes o crea la DB si no existe y si no es en memoria
+            if (context.Database.ProviderName?.Contains("InMemory") == false) 
+            {
+                context.Database.Migrate();
+            }
             break; // Si tiene éxito, salimos del bucle
         }
         catch (Exception ex)
         {
             if (i == 4) throw; // Si falló 5 veces, apagamos la app
+
+            // Si estamos en Testing, no esperes 2 segundos, falla rápido o ignora
+            if (app.Environment.IsEnvironment("Testing")) break;
+
             Console.WriteLine("Postgres no está listo, reintentando en 2 segundos...");
+            Log.Error(ex, "Postgres no está listo, reintentando en 2 segundos...");
             Thread.Sleep(2000);
         }
     }
