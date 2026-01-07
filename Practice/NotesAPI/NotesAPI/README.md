@@ -79,13 +79,25 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | **✅** | 29. **Kubernetes (K8s) Basics**: Crear Manifests (Deployment, Service, ConfigMaps). | Escalabilidad y Auto-curación. |
 | **✅** | 30. **K8s Advanced**: Implementar Liveness y Readiness Probes usando los Health Checks. | Ciclo de vida del Pod. |
 | **✅** | 31. K8s Networking (Ingress): Configurar NGINX Ingress Controller para acceder vía notes.local.	| Reverse Proxy y Routing avanzado. |
-| **IN PROGRESS** | 32. **CI/CD Pipeline**: Configurar GitHub Actions para Build y Push de imagen. | Automatización de despliegue. |
-| $\square$ | **Finalización Etapa 8** | **Cloud Native & Orchestration** |
-| $\square$ | 33. **ASP.NET Core Identity** | Reemplazo de Auth manual por Identity. |
-| $\square$ | 34. **RBAC (Role-Based Access Control)** | Implementación de Roles (Admin/User). |
-| $\square$ | 35. **Refresh Tokens** | Estrategias avanzadas de persistencia de sesión. |
-| $\square$ | **Finalización Etapa 9** | **Enterprise Grade Security** |
-
+| **✅** | 32. **CI/CD Pipeline**: Configurar GitHub Actions para Build y Push de imagen. | Automatización de despliegue. |
+| **✅** | **Finalización Etapa 8** | **Cloud Native & Orchestration** |
+| **IN PROGRESS** | 33. **ASP.NET Core Identity** | UserManager, RoleManager, y Claims. |
+| $\square$ | 34. **RBAC** | Autorización basada en Roles y Políticas. |
+| $\square$ | 35. **Refresh Tokens** | Ciclo de vida del Token y seguridad en el cliente. |
+| $\square$ | **Finalización Etapa 9** | Enterprise Grade Security |
+| $\square$ | 36. Service Bus Integration | Abstracción de mensajería con MassTransit. |
+| $\square$ | 37. Pub/Sub Pattern | Publicación de eventos de dominio. |
+| $\square$ | 38. Background Tasks | Consumo de mensajes y procesamiento desacoplado. |
+| $\square$ | **Finalización Etapa 10** | Event-Driven Architecture (EDA) |
+| $\square$ | 39. **Object Storage** | Permitir adjuntar imágenes a las notas. Guardar la imagen en AWS S3 o Azure Blob Storage (puedes usar LocalStack para simular AWS gratis en Docker). |
+| $\square$ | 40. **Serverless Processing** | Implementar una AWS Lambda o Azure Function que se dispare cuando subas una imagen para crear una miniatura (Thumbnail). |
+| $\square$ | **Finalización Etapa 11** | **Cloud & Storage (AWS/Azure Integration)** |
+| $\square$ | 41. **Audit Logs (NoSQL)** | Implementar MongoDB o CosmosDB para guardar logs de auditoría o versiones antiguas de las notas. |
+| $\square$ | 42. **Real-time Notifications** | SignalR o Firebase para avisar cambios al frontend. |
+| $\square$ | **Finalización Etapa 12** | **NoSQL & Polyglot Persistence** |
+| $\square$ | 43. **External Identity(OAuth2)** | Integrar un proveedor externo (Auth0/Azure AD/Google). |
+| $\square$ | 44. **API Gateway** | Configurar YARP u Ocelot para gestionar el tráfico. |
+| $\square$ | **Finalización Etapa 13** | **Advanced Gateway & External Auth** |
 ---
 
 ## 📊 Notas Técnicas de Observabilidad
