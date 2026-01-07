@@ -1,14 +1,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using HealthChecks.Redis;
-using NotesAPI.Data;
 using NotesAPI.Services;
+using NotesAPI.Data;
+using System.Text;
 using Prometheus;
 using Serilog;
-using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,8 +20,12 @@ var configuration = builder.Configuration;
 // CONFIGURACIÓN JWT
 // Buscamos la clave. Si no existe (como en el servidor de integración), 
 // usamos una clave de emergencia de 32 caracteres para que la API no explote al iniciar.
-var jwtKeyString = configuration["Jwt:Key"] ?? "Esta_Es_Una_Clave_Muy_Larga_De_Prueba_32_Chars";
-var key = Encoding.ASCII.GetBytes(jwtKeyString);
+var jwtKeyString = 
+    configuration["Jwt:Key"] ?? 
+    "Esta_Es_Una_Clave_Muy_Larga_De_Prueba_32_Chars";
+var key = Encoding.UTF8.GetBytes(jwtKeyString);
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -29,15 +34,21 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    // AÑADE ESTA LÍNEA AQUÍ:
+    options.UseSecurityTokenValidators = true; // Esto obliga a usar el validador compatible con JwtSecurityToken
+
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
+    var signingKey = new SymmetricSecurityKey(key);
+    signingKey.KeyId = "NotesApiKeyId";
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false,
+        IssuerSigningKey = signingKey,
+        ValidateIssuer = false, 
         ValidateAudience = false,
-        ValidateLifetime = true 
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
     };
 });
 

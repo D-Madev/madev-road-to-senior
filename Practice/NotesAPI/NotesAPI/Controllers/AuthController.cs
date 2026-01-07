@@ -36,8 +36,9 @@ public class AuthController : ControllerBase
         };
 
         // Leer clave secreta y crear credenciales
-        var jwtKey = _configuration["Jwt:Key"]!;
-        var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey));
+        var jwtKey = _configuration["Jwt:Key"] ?? "Esta_Es_Una_Clave_Muy_Larga_De_Prueba_32_Chars";
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+        key.KeyId = "NotesApiKeyId";
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         // Definir el token
