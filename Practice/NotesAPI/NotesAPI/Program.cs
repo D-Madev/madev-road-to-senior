@@ -1,7 +1,9 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using HealthChecks.Redis;
@@ -11,20 +13,25 @@ using System.Text;
 using Prometheus;
 using Serilog;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Obtener el IConfiguration (ya disponible a través del builder)
 var configuration = builder.Configuration;
 
+// Helper para validar variables requeridas
+string GetRequiredConfig(string key) => 
+    Environment.GetEnvironmentVariable(key) ?? configuration[key] 
+    ?? throw new InvalidOperationException($"Variable de entorno faltante: {key}");
+
 // CONFIGURACIÓN JWT
 // Buscamos la clave. Si no existe (como en el servidor de integración), 
 // usamos una clave de emergencia de 32 caracteres para que la API no explote al iniciar.
-var jwtKeyString = 
-    configuration["Jwt:Key"] ?? 
-    "Esta_Es_Una_Clave_Muy_Larga_De_Prueba_32_Chars";
-var key = Encoding.UTF8.GetBytes(jwtKeyString);
+var jwtKeyString = GetRequiredConfig("JWT_KEY");
+var connectionString = GetRequiredConfig("DB_CONNECTION_STRING");
+var redisConnectionString = GetRequiredConfig("REDIS_CONNECTION_STRING");
+var allowedOrigins = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS") ?? "*";
 
+var key = Encoding.UTF8.GetBytes(jwtKeyString);
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddAuthentication(options =>
@@ -34,9 +41,8 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    // AÑADE ESTA LÍNEA AQUÍ:
-    options.UseSecurityTokenValidators = true; // Esto obliga a usar el validador compatible con JwtSecurityToken
-
+    // Esto obliga a usar el validador compatible con JwtSecurityToken
+    options.UseSecurityTokenValidators = true;
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
     var signingKey = new SymmetricSecurityKey(key);
@@ -52,21 +58,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-var frontend = builder.Configuration.GetValue<string>("AllowedOrigins:Frontend");
-
-if (!string.IsNullOrEmpty(frontend))
+builder.Services.AddCors(options => 
 {
-    builder.Services.AddCors(options =>
+    options.AddPolicy("Origins", policy =>
     {
-        options.AddPolicy(name: "Origins",
-            builder =>
-            {
-                builder.WithOrigins(frontend)
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-            });
+        policy.WithOrigins(allowedOrigins.Split(","))
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
-}
+});
 
 /* Usar la implementación con datos estaticos.
  * 
@@ -77,8 +77,8 @@ if (!string.IsNullOrEmpty(frontend))
  */
 // builder.Services.AddSingleton<INotesRepository, StaticNotesRepository>();
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     // Definir el esquema de seguridad (JWT Bearer)
@@ -119,28 +119,31 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
+    // Toma los comentarios de arriba de los métodos y los "inyecta" dentro de Swagger
     var xmlFilename = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    var xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFilename);
+    
+    // Solo incluir si el archivo existe físicamente en el contenedor
+    if (System.IO.File.Exists(xmlPath)) 
+    {
+        options.IncludeXmlComments(xmlPath);
+    }
 });
 
-/*
- * Explicación del Lifetime (Q19): El método AddDbContext automáticamente registra 
- * el NotesDbContext con el Lifetime Scoped. Esto garantiza que cada nueva petición 
- * HTTP obtenga una nueva conexión a la DB, evitando conflictos entre usuarios.
-*/
-// builder.Services.AddDbContext<NotesDbContext>(options 
-//     => options.UseInMemoryDatabase("NotesDb"));
-// Si estamos en Docker, usaremos una variable de entorno. Si es local, appsettings.
-var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") 
-                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
+// Seccion de Datos e Identity
 builder.Services.AddDbContext<NotesDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-var redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING") 
-                            ?? builder.Configuration.GetConnectionString("RedisConnection") 
-                            ?? "localhost:6379"; // Fallback por si te olvidás de configurarlo
+// Añadimos Identity
+builder.Services.AddIdentityApiEndpoints<IdentityUser>(options => {
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+})
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<NotesDbContext>();
 
+// REDIS
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = redisConnectionString;
@@ -152,7 +155,7 @@ builder.Services.AddHealthChecks()
     .AddDbContextCheck<NotesDbContext>(name: "Postgres")
     .AddRedis(redisConnectionString, name: "Redis");
 
-// 11. Registrar el service layer
+// Registrar el service layer
 builder.Services.AddScoped<INotesService, NotesService>();
 
 // Configurar el logger de serilog
@@ -166,48 +169,50 @@ try
 {
     // Reemplaza el logger predeterminado por serilog
     builder.Host.UseSerilog();
-
     var app = builder.Build();
 
-    for (int i = 0; i < 5; i++)
+    // --- BLOQUE DE MIGRACIONES ---
+    using (var scope = app.Services.CreateScope())
     {
-        try
+        var services = scope.ServiceProvider;
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        var env = services.GetRequiredService<IWebHostEnvironment>();
+
+        for (int i = 1; i <= 5; i++)
         {
-            /* Sembramos datos y contexto */
-            using var scope = app.Services.CreateScope();
-            var services = scope.ServiceProvider;
-            var context = services.GetRequiredService<NotesDbContext>();
-
-            // Llama al método estático que creamos
-            // NotesDbContext.Initialize(services);
-
-            // Aplica las migraciones pendientes o crea la DB si no existe y si no es en memoria
-            if (context.Database.ProviderName?.Contains("InMemory") == false) 
+            try
             {
-                context.Database.Migrate();
+                var context = services.GetRequiredService<NotesDbContext>();
+                
+                // Si usamos In-Memory (Tests), no migramos
+                if (context.Database.ProviderName?.Contains("InMemory") == false) context.Database.Migrate();
+                
+                logger.LogInformation("✅ Base de datos migrada con éxito.");
+                break; 
             }
-            break; // Si tiene éxito, salimos del bucle
-        }
-        catch (Exception ex)
-        {
-            if (i == 4) throw; // Si falló 5 veces, apagamos la app
+            catch (Exception ex)
+            {
+                if (i == 5) 
+                {
+                    logger.LogCritical(ex, "❌ Falló la migración tras 5 intentos. Apagando...");
+                    throw; 
+                }
 
-            // Si estamos en Testing, no esperes 2 segundos, falla rápido o ignora
-            if (app.Environment.IsEnvironment("Testing")) break;
+                if (env.IsEnvironment("Testing")) break;
 
-            Console.WriteLine("Postgres no está listo, reintentando en 2 segundos...");
-            Log.Error(ex, "Postgres no está listo, reintentando en 2 segundos...");
-            Thread.Sleep(2000);
+                logger.LogWarning("⚠️ Intento {Attempt}/5: Postgres no está listo. Reintentando en 2s...", i);
+                Thread.Sleep(2000);
+            }
         }
     }
 
     // Exponer el endpoint /metrics para Prometheus
     app.MapMetrics();
 
-    // TAREA 9: Configurar el endpoint de Health Checks (Q20)
+    // Configurar el endpoint de Health Checks (Q20)
     app.MapHealthChecks("/health");
 
-    // TAREA 8: GLOBAL EXCEPTION HANDLING (Q23)
+    // GLOBAL EXCEPTION HANDLING (Q23)
     // Configura un manejador global de excepciones (Middleware)
     app.UseExceptionHandler(errorApp =>
     {
@@ -240,7 +245,7 @@ try
         });
     });
 
-    if (app.Environment.IsDevelopment())
+    if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
     {
         app.UseSwagger();
         app.UseSwaggerUI(); 
@@ -256,6 +261,8 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
 
+    // Endpoints automáticos de Identity (Registro, Login, etc)
+    app.MapGroup("/identity").MapIdentityApi<IdentityUser>();
     app.MapControllers();
 
     Log.Information("✅ NotesAPI ha iniciado correctamente.");

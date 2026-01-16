@@ -1,10 +1,13 @@
 ﻿namespace NotesAPI.Data;
 
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NotesAPI.Models;
 
-// Hereda de DbContext (Q12)
-public class NotesDbContext : DbContext
+// PASADO: DbContext (Q12)
+// Heredamos de IdentityDbContext en lugar de DbContext
+public class NotesDbContext : IdentityDbContext<IdentityUser>
 {
     public NotesDbContext(DbContextOptions<NotesDbContext> options) : base(options) { }
 
@@ -31,6 +34,9 @@ public class NotesDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Configura las claves primarias de IdentityPasskeyData y demás tablas de Identity
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Note>().HasData(
             new Note { Id = 1, Title = "Task 1", Content = "Review Routing" },
             new Note { Id = 2, Title = "Task 2", Content = "Focus on DbContext" }

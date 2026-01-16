@@ -97,6 +97,7 @@ Esta tabla indica dónde pausaste y qué necesitas hacer a continuación. **ACTU
 | $\square$ | **Finalización Etapa 12** | **NoSQL & Polyglot Persistence** |
 | $\square$ | 43. **External Identity(OAuth2)** | Integrar un proveedor externo (Auth0/Azure AD/Google). |
 | $\square$ | 44. **API Gateway** | Configurar YARP u Ocelot para gestionar el tráfico. |
+| $\square$ | 45. **Backend for Frontend** | Implementar un API Gateway para gestionar el tráfico. |
 | $\square$ | **Finalización Etapa 13** | **Advanced Gateway & External Auth** |
 ---
 
